@@ -34,3 +34,4 @@ public class Main {
         server.join();
     }
 }
+//Как вообще это тестировать?

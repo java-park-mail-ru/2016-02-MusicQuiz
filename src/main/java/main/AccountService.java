@@ -5,6 +5,7 @@ import rest.UserProfile;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * Created by IlyaRogov on 29.02.16.
@@ -30,9 +31,9 @@ public class AccountService {
         return true;
     }
 
-    public UserProfile getUser(Long id) {
+    /*public UserProfile getUser(Long id) {
         return users.get(id);
-    }
+    }*/
 
     public Boolean deleteUser(Long id) {
         if(users.containsKey(id)) {
@@ -44,19 +45,27 @@ public class AccountService {
         }
     }
 
-    /*public void updateUser() {
-
+    public boolean updateUser(Long ID, UserProfile user) {
+        if(users.containsKey(ID)) {
+            UserProfile current_user = getUserByID(ID);
+            user.setLogin(user.getLogin());
+            current_user.setPassword(user.getPassword());
+            current_user.setEmail(user.getEmail());
+            return true;
+        }
+        else return false;
     }
-
-    public UserProfile getUserByLogin(String login) {
-
-    }
+    /*public UserProfile getUserByLogin(String login) {
+        return users.get(1);
+    }*/
+    //зачем этот метод? user`ов же так неудобно доставать?
 
     public UserProfile getUserByID(Long ID) {
-
+        return users.get(ID);
     }
 
-    public UserProfile getUserByEmail(String mail) {
-
+    /*public UserProfile getUserByEmail(String mail) {
+        return users.get(1);
     }*/
+    //и этот?
 }

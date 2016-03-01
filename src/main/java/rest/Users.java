@@ -52,13 +52,18 @@ public class Users {
         }
     }
 
-    /*@PUT
+    @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateUser(@PathParam("id") Long id, UserProfile user) {
-
-    }*/
+        if(accountService.updateUser(id, user)){
+            return Response.status(Response.Status.OK).entity(user).build();
+        }
+        else{
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+    }
 
     @DELETE
     @Path("{id}")
