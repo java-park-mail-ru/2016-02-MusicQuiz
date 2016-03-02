@@ -21,8 +21,6 @@ public class Main {
 
         System.out.append("Starting at port: ").append(String.valueOf(port)).append('\n');
 
-        AccountService accountService = new AccountService();
-
         final Server server = new Server(port);
         final ServletContextHandler contextHandler = new ServletContextHandler(server, "/api/", ServletContextHandler.SESSIONS);
 
@@ -34,4 +32,3 @@ public class Main {
         server.join();
     }
 }
-//Как вообще это тестировать?

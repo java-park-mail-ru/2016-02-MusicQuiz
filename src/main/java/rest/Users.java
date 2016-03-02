@@ -3,6 +3,8 @@ package rest;
 import main.AccountService;
 
 import javax.inject.Singleton;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
@@ -26,18 +28,23 @@ public class Users {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllUsers() {
         final Collection<UserProfile> allUsers = accountService.getAllUsers();
-        return Response.status(Response.Status.OK).entity(allUsers.toArray(new UserProfile[allUsers.size()])).build();
+        System.out.append(String.valueOf(allUsers.size()));
+        return Response.status(Response.Status.OK).entity("").build();
     }
 
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserByName(@PathParam("id") Long id) {
-        final UserProfile user = accountService.getUserByID(id);
-        if(user == null){
-            return Response.status(Response.Status.FORBIDDEN).build();
-        }else {
-            return Response.status(Response.Status.OK).entity(user).build();
+    public Response getUserByID(@PathParam("id") Long id) {
+        final UserProfile user = accountService.getUser(id);
+        String jsonStr =  "{ \"id\": " + user.getID() +", " +
+                            "\"login\": \"" + user.getLogin() + "\", " +
+                            "\"email\": \"" + user.getEmail() + "\" }";
+        if(user.getID() == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        else {
+            return Response.status(Response.Status.OK).entity(jsonStr).build();
         }
     }
 
@@ -45,8 +52,9 @@ public class Users {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createUser(UserProfile user, @Context HttpHeaders headers){
+        String jsonStr = "{ \"id\": " + user.getID() +" }";
         if(accountService.addUser(user)){
-            return Response.status(Response.Status.OK).entity(user.getLogin()).build();
+            return Response.status(Response.Status.OK).entity(jsonStr).build();
         } else {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
@@ -56,23 +64,35 @@ public class Users {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateUser(@PathParam("id") Long id, UserProfile user) {
-        if(accountService.updateUser(id, user)){
-            return Response.status(Response.Status.OK).entity(user).build();
+    public Response updateUser(@PathParam("id") Long id, UserProfile user,
+                               @Context HttpHeaders headers, @Context HttpServletRequest request) {
+        final String SessionID = request.getSession().getId();
+        UserProfile updatingUser = accountService.getUserBySession(SessionID);
+        String jsonStr200 = "{ \"id\": " + user.getID() +" }";
+        String jsonStr403 = "{ " +
+                            "\"status\": 403, " +
+                            "\"message\": \"Чужой юзер\" }";
+        if(updatingUser == null || !updatingUser.equals(user)) {
+            return Response.status(Response.Status.FORBIDDEN).entity(jsonStr403).build();
         }
-        else{
-            return Response.status(Response.Status.FORBIDDEN).build();
+        else {
+            accountService.updateUser(user, updatingUser);
+            return Response.status(Response.Status.OK).entity(jsonStr200).build();
         }
     }
 
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteUser(@PathParam("id") Long id, @Context HttpHeaders headers) {
-        if(accountService.deleteUser(id)) {
+    public Response deleteUserByID(@PathParam("id") Long id, @Context HttpHeaders headers) {
+        String jsonStr = "{ " +
+                            "\"status\": 403, " +
+                            "\"message\": \"Чужой юзер\"" +
+                         " }";
+        if(!accountService.deleteUser(id)) {
             return Response.status(Response.Status.OK).build();
         }
         else
-            return Response.status(Response.Status.FORBIDDEN).build();
+            return Response.status(Response.Status.FORBIDDEN).entity(jsonStr).build();
     }
 }

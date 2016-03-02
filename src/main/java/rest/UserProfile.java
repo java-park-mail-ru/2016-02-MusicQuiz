@@ -1,11 +1,13 @@
 package rest;
 
 import org.jetbrains.annotations.NotNull;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by IlyaRogov on 29.02.16.
  */
 public class UserProfile {
+    private static final AtomicLong ID_GENETATOR = new AtomicLong(0);
     @NotNull
     private Long id;
     @NotNull
@@ -15,8 +17,8 @@ public class UserProfile {
     @NotNull
     private String email;
 
-    public UserProfile(Long id, String login, String password, String email) {
-        this.id = id;
+    public UserProfile(@NotNull String login, @NotNull String password, @NotNull String email) {
+        this.id = ID_GENETATOR.getAndIncrement();
         this.login = login;
         this.password = password;
         this.email = email;
