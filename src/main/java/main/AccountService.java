@@ -3,7 +3,6 @@ package main;
 import org.jetbrains.annotations.Nullable;
 import rest.UserProfile;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,9 +19,6 @@ public class AccountService {
         users.put(1L, new UserProfile("guest", "12345", "guest@gue.st"));
     }
 
-    public Collection<UserProfile> getAllUsers() {
-        return users.values();
-    }
 
     public boolean addUser(UserProfile userProfile) {
         if(users.containsKey(userProfile.getID()))
@@ -54,11 +50,11 @@ public class AccountService {
     }
 
     public void updateUser(UserProfile user, UserProfile changedUser) {
-        if(!user.getLogin().equals(changedUser.getLogin()) && changedUser.getLogin() != null) {
+        if(!user.getLogin().equals(changedUser.getLogin())) {
                 user.setLogin(changedUser.getLogin());
         }
 
-        if(!user.getPassword().equals(changedUser.getPassword()) && changedUser.getPassword() != null) {
+        if(!user.getPassword().equals(changedUser.getPassword())) {
             user.setPassword(changedUser.getPassword());
         }
 

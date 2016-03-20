@@ -25,30 +25,22 @@ public class Users {
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllUsers() {
-        final Collection<UserProfile> allUsers = accountService.getAllUsers();
-        System.out.append(String.valueOf(allUsers.size()));
-        return Response.status(Response.Status.OK).entity("").build();
-    }
-
-    @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserByID(@PathParam("id") Long id) {
         final UserProfile user = accountService.getUser(id);
-        String jsonStr =  "{ \"id\": " + user.getID() +", " +
-                            "\"login\": \"" + user.getLogin() + "\", " +
-                            "\"email\": \"" + user.getEmail() + "\" }";
-        if(user.getID() == null) {
+        if(user == null) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
         else {
+            String jsonStr =  "{ \"id\": " + user.getID() +", " +
+                    "\"login\": \"" + user.getLogin() + "\", " +
+                    "\"email\": \"" + user.getEmail() + "\" }";
             return Response.status(Response.Status.OK).entity(jsonStr).build();
         }
     }
 
-    @POST
+    @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createUser(UserProfile user, @Context HttpHeaders headers){
@@ -60,7 +52,7 @@ public class Users {
         }
     }
 
-    @PUT
+    @POST
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -68,14 +60,14 @@ public class Users {
                                @Context HttpHeaders headers, @Context HttpServletRequest request) {
         final String SessionID = request.getSession().getId();
         UserProfile updatingUser = accountService.getUserBySession(SessionID);
-        String jsonStr200 = "{ \"id\": " + user.getID() +" }";
-        String jsonStr403 = "{ " +
-                            "\"status\": 403, " +
-                            "\"message\": \"Чужой юзер\" }";
         if(updatingUser == null || !updatingUser.equals(user)) {
+            String jsonStr403 = "{ " +
+                    "\"status\": 403, " +
+                    "\"message\": \"Чужой юзер\" }";
             return Response.status(Response.Status.FORBIDDEN).entity(jsonStr403).build();
         }
         else {
+            String jsonStr200 = "{ \"id\": " + user.getID() +" }";
             accountService.updateUser(user, updatingUser);
             return Response.status(Response.Status.OK).entity(jsonStr200).build();
         }
