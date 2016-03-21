@@ -26,7 +26,6 @@ public class Users {
 
     @GET
     @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response getUserByID(@PathParam("id") Long id) {
         final UserProfile user = accountService.getUser(id);
         if(user == null) {

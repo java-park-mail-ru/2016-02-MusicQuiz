@@ -68,11 +68,6 @@ public class AccountService {
         sessions.put(SessionID, user);
     }
 
-    public Boolean isAuthenticated(String SessionID, UserProfile user) {
-
-        return sessions.get(SessionID).getID().equals(user.getID());
-    }
-
     public void logOut(String SessionID) {
         sessions.remove(SessionID);
     }
