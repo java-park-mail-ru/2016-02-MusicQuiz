@@ -33,6 +33,23 @@ public class AccountService {
         else return null;
     }
 
+    @Nullable
+    public UserProfile getUserByLogin(String login){
+        for(UserProfile user : users.values()){
+            if(user.getLogin().equals(login)){
+                return user;
+            }
+        }
+        return null;
+    }
+/* dbg_print
+
+    public void print_sessions(){
+        for(String s : sessions.keySet()){
+            System.out.println(s);
+        }
+    }*/
+
     public void deleteUser(Long id) {
             users.remove(id);
     }

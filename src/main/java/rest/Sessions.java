@@ -5,7 +5,6 @@ import main.AccountService;
 import javax.inject.Singleton;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -28,14 +27,15 @@ public class Sessions {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response isAuthenticated(@Context HttpServletRequest request, @Context HttpHeaders headers) {
+    public Response isAuthenticated(@Context HttpServletRequest request) {
+        //см. Users.java TODO
         final String SessionID = request.getSession().getId();
         UserProfile user = accountService.getUserBySession(SessionID);
         if(user == null){
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
         else {
-            String jsonStr200 = "{ \"id\": " + user.getID() + " }";
+            String jsonStr200 = "{\n\t\"id\": " + user.getID() + "\n}\n";
             return Response.status(Response.Status.OK).entity(jsonStr200).build();
         }
     }
@@ -44,24 +44,25 @@ public class Sessions {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addSession(UserProfile user, @Context HttpHeaders headers,  @Context HttpServletRequest request) {
+    public Response addSession(UserProfile user, @Context HttpServletRequest request) {
         final String SessionID = request.getSession().getId();
-        UserProfile currentUser = accountService.getUser(user.getID());
+        UserProfile currentUser = accountService.getUserByLogin(user.getLogin());
         if(currentUser != null && currentUser.getPassword().equals(user.getPassword())) {
-            String jsonStr200 = "{ \"id\": " + user.getID() +" }";
-            accountService.logIn(SessionID, user);
+            String jsonStr200 = "{\n\t\"id\": " + currentUser.getID() +"\n}\n";
+            accountService.logIn(SessionID, currentUser);
             return Response.status(Response.Status.OK).entity(jsonStr200).build();
         }
         else {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("{}\n").build();
         }
     }
 
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteSession(@Context HttpServletRequest request) {
+        //См. Users.java TODO
         final String SessionID = request.getSession().getId();
         accountService.logOut(SessionID);
-        return Response.status(Response.Status.OK).build();
+        return Response.status(Response.Status.OK).entity("{}\n").build();
     }
 }

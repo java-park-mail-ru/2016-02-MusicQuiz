@@ -18,10 +18,9 @@ public class UserProfile {
 
     public UserProfile() {
         id = -1;
-        login = "";
-        password = "";
-        email = "";
-        System.out.println(this.id);
+        login = "l";
+        password = "p";
+        email = "e";
     }
 
     public UserProfile(UserProfile user) {
@@ -29,7 +28,6 @@ public class UserProfile {
         this.login = user.getLogin();
         this.password = user.getPassword();
         this.email = user.getEmail();
-        System.out.println("!");
     }
 
     public long getID() {
