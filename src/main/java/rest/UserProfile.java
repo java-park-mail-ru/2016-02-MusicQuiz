@@ -16,6 +16,12 @@ public class UserProfile {
     @NotNull
     private String email;
 
+    public UserProfile() {
+        id = -1;
+        login = "";
+        password = "";
+        email = "";
+    }
 
     public UserProfile(@NotNull String login, @NotNull String password, @NotNull String email) {
         this.id = ID_GENERATOR.getAndIncrement();
