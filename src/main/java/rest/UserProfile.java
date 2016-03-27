@@ -21,13 +21,15 @@ public class UserProfile {
         login = "";
         password = "";
         email = "";
+        System.out.println(this.id);
     }
 
-    public UserProfile(@NotNull String login, @NotNull String password, @NotNull String email) {
+    public UserProfile(UserProfile user) {
         this.id = ID_GENERATOR.getAndIncrement();
-        this.login = login;
-        this.password = password;
-        this.email = email;
+        this.login = user.getLogin();
+        this.password = user.getPassword();
+        this.email = user.getEmail();
+        System.out.println("!");
     }
 
     public long getID() {

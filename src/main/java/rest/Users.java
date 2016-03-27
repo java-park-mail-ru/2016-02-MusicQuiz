@@ -6,10 +6,7 @@ import javax.inject.Singleton;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import java.util.Collection;
 
 /**
@@ -43,8 +40,9 @@ public class Users {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createUser(UserProfile user, @Context HttpHeaders headers){
-        String jsonStr = "{ \"id\": " + user.getID() +" }";
-        if(accountService.addUser(user)){
+        UserProfile currentUser = new UserProfile(user);
+        String jsonStr = "{ \n\t\"id\": " + currentUser.getID() +"\n}\n";
+        if(accountService.addUser(currentUser)){
             return Response.status(Response.Status.OK).entity(jsonStr).build();
         } else {
             return Response.status(Response.Status.FORBIDDEN).build();
@@ -75,15 +73,19 @@ public class Users {
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteUserByID(@PathParam("id") Long id, @Context HttpHeaders headers) {
-        String jsonStr = "{ " +
-                            "\"status\": 403, " +
-                            "\"message\": \"Чужой юзер\"" +
-                         " }";
-        if(!accountService.deleteUser(id)) {
+    public Response deleteUserByID(@PathParam("id") Long id, @Context HttpHeaders headers, @Context HttpServletRequest request) {
+        final String SessionID = request.getSession().getId();
+        UserProfile currentUser = accountService.getUserBySession(SessionID);
+        if(currentUser != null && (currentUser.getID())==id){
+            accountService.deleteUser(id);
             return Response.status(Response.Status.OK).build();
         }
-        else
+        else {
+            String jsonStr = "{ " +
+                    "\n\tstatus: " + 403  + "," +
+                    "\n\tmessage \": \"Чужой юзер\"" +
+                    "\n}\n";
             return Response.status(Response.Status.FORBIDDEN).entity(jsonStr).build();
+        }
     }
 }

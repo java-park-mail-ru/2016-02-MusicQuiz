@@ -14,12 +14,6 @@ public class AccountService {
     private Map<Long, UserProfile> users = new HashMap<>();
     private Map<String, UserProfile> sessions = new HashMap<>();
 
-    public AccountService() {
-        users.put(0L, new UserProfile("admin", "admin", "admin@addm.in"));
-        users.put(1L, new UserProfile("guest", "12345", "guest@gue.st"));
-    }
-
-
     public boolean addUser(UserProfile userProfile) {
         if(users.containsKey(userProfile.getID()))
             return false;
@@ -39,14 +33,8 @@ public class AccountService {
         else return null;
     }
 
-    public Boolean deleteUser(Long id) {
-        if(users.containsKey(id)) {
+    public void deleteUser(Long id) {
             users.remove(id);
-            return true;
-        }
-        else {
-            return false;
-        }
     }
 
     public void updateUser(UserProfile user, UserProfile changedUser) {
@@ -58,7 +46,7 @@ public class AccountService {
             user.setPassword(changedUser.getPassword());
         }
 
-        if(!user.getEmail().equals(changedUser.getEmail()) && changedUser.getEmail() != null) {
+        if(!user.getEmail().equals(changedUser.getEmail())) {
             user.setEmail(changedUser.getEmail());
         }
 
