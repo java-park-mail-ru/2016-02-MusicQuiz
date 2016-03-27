@@ -7,9 +7,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * Created by IlyaRogov on 29.02.16.
  */
 public class UserProfile {
-    private static final AtomicLong ID_GENETATOR = new AtomicLong(0);
-    @NotNull
-    private Long id;
+    private static final AtomicLong ID_GENERATOR = new AtomicLong(0);
+    private long id;
     @NotNull
     private String login;
     @NotNull
@@ -17,16 +16,16 @@ public class UserProfile {
     @NotNull
     private String email;
 
+
     public UserProfile(@NotNull String login, @NotNull String password, @NotNull String email) {
-        this.id = ID_GENETATOR.getAndIncrement();
+        this.id = ID_GENERATOR.getAndIncrement();
         this.login = login;
         this.password = password;
         this.email = email;
     }
 
-    @NotNull
-    public Long getID() {
-        return id;
+    public long getID() {
+        return this.id;
     }
 
     @NotNull
@@ -47,11 +46,8 @@ public class UserProfile {
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
-    }
+    @NotNull
+    public String getEmail() { return email; }
 
-    public void setEmail(@NotNull String email) {
-        this.email = email;
-    }
+    public void setEmail(@NotNull String email) { this.email = email; }
 }
