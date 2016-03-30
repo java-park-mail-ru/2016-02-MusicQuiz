@@ -14,12 +14,12 @@ import java.util.Set;
 
 @ApplicationPath("api")
 public class RestApplication extends Application {
-    @Override
+/*    @Override
     public Set<Object> getSingletons() {
         final HashSet<Object> objects = new HashSet<>();
-        AccountService accountService = new AccountService();
-        objects.add(new Users(accountService));
+        AccountService accountService = new AccountServiceImpl();
+        objects.add(new Users(accountServiceImpl));
         objects.add(new Sessions(accountService));
         return objects;
-    }
+    }*/
 }

@@ -16,6 +16,7 @@ public class UserProfile {
     @NotNull
     private String email;
 
+    @SuppressWarnings("unused")
     public UserProfile() {
         id = -1;
         login = "l";
@@ -25,9 +26,16 @@ public class UserProfile {
 
     public UserProfile(UserProfile user) {
         this.id = ID_GENERATOR.getAndIncrement();
-        this.login = user.getLogin();
-        this.password = user.getPassword();
-        this.email = user.getEmail();
+        this.login = user.login;
+        this.password = user.password;
+        this.email = user.email;
+    }
+
+    public UserProfile(@NotNull String login, @NotNull String password, @NotNull String email){
+        this.id = ID_GENERATOR.getAndIncrement();
+        this.login = login;
+        this.password = password;
+        this.email = email;
     }
 
     public long getID() {

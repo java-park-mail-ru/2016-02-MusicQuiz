@@ -2,6 +2,7 @@ package rest;
 
 import main.AccountService;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -16,19 +17,16 @@ import javax.ws.rs.core.Response;
 @Singleton
 @Path("/session")
 public class Sessions {
-
-    private AccountService accountService;
-
-    public Sessions(AccountService accountService) {
-        this.accountService = accountService;
-    }
-
+    @SuppressWarnings("unused")
+    @Inject
+    private main.Context context;
 
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response isAuthenticated(@Context HttpServletRequest request) {
         //см. Users.java TODO
+        final AccountService accountService = context.get(AccountService.class);
         final String SessionID = request.getSession().getId();
         UserProfile user = accountService.getUserBySession(SessionID);
         if(user == null){
@@ -45,6 +43,7 @@ public class Sessions {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addSession(UserProfile user, @Context HttpServletRequest request) {
+        final AccountService accountService = context.get(AccountService.class);
         final String SessionID = request.getSession().getId();
         UserProfile currentUser = accountService.getUserByLogin(user.getLogin());
         if(currentUser != null && currentUser.getPassword().equals(user.getPassword())) {
@@ -61,6 +60,7 @@ public class Sessions {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteSession(@Context HttpServletRequest request) {
         //См. Users.java TODO
+        final AccountService accountService = context.get(AccountService.class);
         final String SessionID = request.getSession().getId();
         accountService.logOut(SessionID);
         return Response.status(Response.Status.OK).entity("{}\n").build();

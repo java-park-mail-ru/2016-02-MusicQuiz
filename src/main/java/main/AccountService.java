@@ -10,70 +10,23 @@ import java.util.Map;
  * Created by IlyaRogov on 29.02.16.
  */
 
-public class AccountService {
-    private Map<Long, UserProfile> users = new HashMap<>();
-    private Map<String, UserProfile> sessions = new HashMap<>();
+public interface AccountService {
 
-    public boolean addUser(UserProfile userProfile) {
-        if(users.containsKey(userProfile.getID()))
-            return false;
-        users.put(userProfile.getID(), userProfile);
-        return true;
-    }
+    boolean addUser(UserProfile userProfile);
 
-    public UserProfile getUser(Long id) {
-        return users.get(id);
-    }
+    UserProfile getUser(Long id);
 
     @Nullable
-    public UserProfile getUserBySession(String SessionID) {
-        if(sessions.containsKey(SessionID)) {
-            return sessions.get(SessionID);
-        }
-        else return null;
-    }
+    UserProfile getUserBySession(String SessionID);
 
     @Nullable
-    public UserProfile getUserByLogin(String login){
-        for(UserProfile user : users.values()){
-            if(user.getLogin().equals(login)){
-                return user;
-            }
-        }
-        return null;
-    }
-/* dbg_print
+    UserProfile getUserByLogin(String login);
 
-    public void print_sessions(){
-        for(String s : sessions.keySet()){
-            System.out.println(s);
-        }
-    }*/
+    void deleteUser(Long id);
 
-    public void deleteUser(Long id) {
-            users.remove(id);
-    }
+    void updateUser(UserProfile user, UserProfile changedUser);
 
-    public void updateUser(UserProfile user, UserProfile changedUser) {
-        if(!user.getLogin().equals(changedUser.getLogin())) {
-                user.setLogin(changedUser.getLogin());
-        }
+    void logIn(String SessionID, UserProfile user);
 
-        if(!user.getPassword().equals(changedUser.getPassword())) {
-            user.setPassword(changedUser.getPassword());
-        }
-
-        if(!user.getEmail().equals(changedUser.getEmail())) {
-            user.setEmail(changedUser.getEmail());
-        }
-
-    }
-
-    public void logIn(String SessionID, UserProfile user) {
-        sessions.put(SessionID, user);
-    }
-
-    public void logOut(String SessionID) {
-        sessions.remove(SessionID);
-    }
+    void logOut(String SessionID);
 }

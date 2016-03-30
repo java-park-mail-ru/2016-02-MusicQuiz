@@ -2,6 +2,8 @@ package rest;
 
 import main.AccountService;
 
+
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -13,15 +15,15 @@ import javax.ws.rs.core.*;
 @Singleton
 @Path("/user")
 public class Users {
-    private AccountService accountService;
+    @SuppressWarnings("unused")
+    @Inject
+    private main.Context context;
 
-    public Users(AccountService accountService) {
-        this.accountService = accountService;
-    }
 
     @GET
     @Path("{id}")
     public Response getUserByID(@PathParam("id") Long id) {
+        final AccountService accountService = context.get(AccountService.class);
         final UserProfile user = accountService.getUser(id);
         if(user == null) {
             return Response.status(Response.Status.UNAUTHORIZED).entity("{}\n").build();
@@ -38,6 +40,7 @@ public class Users {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createUser(UserProfile user){
+        final AccountService accountService = context.get(AccountService.class);
         UserProfile currentUser = new UserProfile(user);
         String jsonStr = "{ \n\t\"id\": " + currentUser.getID() +"\n}\n";
         if(accountService.addUser(currentUser)){
@@ -53,6 +56,7 @@ public class Users {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateUser(@PathParam("id") Long id, UserProfile user, @Context HttpServletRequest request) {
         //создается новая сессия для каждого запроса. TODO
+        final AccountService accountService = context.get(AccountService.class);
         final String SessionID = request.getSession().getId();
         UserProfile currentUser = accountService.getUserBySession(SessionID);
         if(currentUser == null || !((currentUser.getID()) == id)) {
@@ -73,6 +77,7 @@ public class Users {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteUserByID(@PathParam("id") Long id, @Context HttpServletRequest request) {
         //Аналогично. TODO
+        final AccountService accountService = context.get(AccountService.class);
         final String SessionID = request.getSession().getId();
         UserProfile currentUser = accountService.getUserBySession(SessionID);
         if(currentUser != null && (currentUser.getID())==id){
