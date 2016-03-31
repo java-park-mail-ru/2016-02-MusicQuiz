@@ -1,6 +1,7 @@
 package rest;
 
 import main.AccountService;
+import org.jetbrains.annotations.Nullable;
 
 
 import javax.inject.Inject;
@@ -8,6 +9,8 @@ import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import javax.servlet.http.Cookie;
+
 
 /**
  * Created by IlyaRogov on 29.02.16.
@@ -19,6 +22,20 @@ public class Users {
     @Inject
     private main.Context context;
 
+    @Nullable
+    private static String getCookie(HttpServletRequest request){
+        String SessionID = null;
+        Cookie[] cookies = request.getCookies();
+        if(cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("MusicQuiz")) {
+                    SessionID = cookie.getValue();
+                    break;
+                }
+            }
+        }
+        return SessionID;
+    }
 
     @GET
     @Path("{id}")
@@ -55,20 +72,22 @@ public class Users {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateUser(@PathParam("id") Long id, UserProfile user, @Context HttpServletRequest request) {
-        //создается новая сессия для каждого запроса. TODO
         final AccountService accountService = context.get(AccountService.class);
-        final String SessionID = request.getSession().getId();
-        UserProfile currentUser = accountService.getUserBySession(SessionID);
-        if(currentUser == null || !((currentUser.getID()) == id)) {
+        final String SessionID = getCookie(request);
+        if(SessionID == null || !accountService.isAuthorized(SessionID)) {
             String jsonStr403 = "{ " +
                     "\n\t\"status\": 403, " +
                     "\n\t\"message\": \"Чужой юзер\" \n}\n";
             return Response.status(Response.Status.FORBIDDEN).entity(jsonStr403).build();
         }
         else {
-            String jsonStr200 = "{\n\t\"id\": " + user.getID() +"\n}\n";
-            accountService.updateUser(user, currentUser);
-            return Response.status(Response.Status.OK).entity(jsonStr200).build();
+            UserProfile currentUser = accountService.getUserBySession(SessionID);
+            if(currentUser != null){
+                accountService.updateUser(currentUser, user);
+                String jsonStr200 = "{\n\t\"id\": " + currentUser.getID() +"\n}\n";
+                return Response.status(Response.Status.OK).entity(jsonStr200).build();
+            }
+            return Response.status(Response.Status.OK).entity("").build();
         }
     }
 
@@ -76,11 +95,9 @@ public class Users {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteUserByID(@PathParam("id") Long id, @Context HttpServletRequest request) {
-        //Аналогично. TODO
         final AccountService accountService = context.get(AccountService.class);
-        final String SessionID = request.getSession().getId();
-        UserProfile currentUser = accountService.getUserBySession(SessionID);
-        if(currentUser != null && (currentUser.getID())==id){
+        final String SessionID = getCookie(request);
+        if(SessionID != null && accountService.isAuthorized(SessionID)) {
             accountService.deleteUser(id);
             return Response.status(Response.Status.OK).entity("{}\n").build();
         }

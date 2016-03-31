@@ -24,9 +24,13 @@ public interface AccountService {
 
     void deleteUser(Long id);
 
+    void print_sessions();
+
     void updateUser(UserProfile user, UserProfile changedUser);
 
     void logIn(String SessionID, UserProfile user);
 
     void logOut(String SessionID);
+
+    boolean isAuthorized(String SessionID);
 }

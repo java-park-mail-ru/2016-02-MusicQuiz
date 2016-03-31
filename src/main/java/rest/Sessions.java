@@ -1,9 +1,12 @@
 package rest;
 
 import main.AccountService;
+import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.servlet.http.HttpServletRequest;
@@ -21,34 +24,49 @@ public class Sessions {
     @Inject
     private main.Context context;
 
+    @Nullable
+    private static String getCookie(HttpServletRequest request){
+        String SessionID = null;
+        Cookie[] cookies = request.getCookies();
+        if(cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("MusicQuiz")) {
+                    SessionID = cookie.getValue();
+                    break;
+                }
+            }
+        }
+        return SessionID;
+    }
+
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response isAuthenticated(@Context HttpServletRequest request) {
-        //см. Users.java TODO
         final AccountService accountService = context.get(AccountService.class);
-        final String SessionID = request.getSession().getId();
-        UserProfile user = accountService.getUserBySession(SessionID);
-        if(user == null){
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+        final String SessionID = getCookie(request);
+        if(SessionID != null && accountService.isAuthorized(SessionID)) {
+            UserProfile user = accountService.getUserBySession(SessionID);
+            if(user != null) {
+                String jsonStr200 = "{\n\t\"id\": " + user.getID() + "\n}\n";
+                return Response.status(Response.Status.OK).entity(jsonStr200).build();
+            }
         }
-        else {
-            String jsonStr200 = "{\n\t\"id\": " + user.getID() + "\n}\n";
-            return Response.status(Response.Status.OK).entity(jsonStr200).build();
-        }
+        return Response.status(Response.Status.UNAUTHORIZED).entity("{}").build();
     }
-
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addSession(UserProfile user, @Context HttpServletRequest request) {
+    public Response addSession(UserProfile user, @Context HttpServletRequest request, @Context HttpServletResponse response) {
         final AccountService accountService = context.get(AccountService.class);
         final String SessionID = request.getSession().getId();
         UserProfile currentUser = accountService.getUserByLogin(user.getLogin());
         if(currentUser != null && currentUser.getPassword().equals(user.getPassword())) {
             String jsonStr200 = "{\n\t\"id\": " + currentUser.getID() +"\n}\n";
             accountService.logIn(SessionID, currentUser);
+            Cookie cookie = new Cookie("MusicQuiz", SessionID);
+            response.addCookie(cookie);
             return Response.status(Response.Status.OK).entity(jsonStr200).build();
         }
         else {
@@ -59,10 +77,11 @@ public class Sessions {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteSession(@Context HttpServletRequest request) {
-        //См. Users.java TODO
+        final String SessionID = getCookie(request);
         final AccountService accountService = context.get(AccountService.class);
-        final String SessionID = request.getSession().getId();
-        accountService.logOut(SessionID);
+        if(SessionID != null && accountService.isAuthorized(SessionID)) {
+            accountService.logOut(SessionID);
+        }
         return Response.status(Response.Status.OK).entity("{}\n").build();
     }
 }

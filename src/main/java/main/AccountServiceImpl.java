@@ -35,6 +35,12 @@ public class AccountServiceImpl implements AccountService {
         else return null;
     }
 
+    public void print_sessions() {
+        for (String s : sessions.keySet()) {
+            System.out.println(s);
+        }
+    }
+
     @Override
     @Nullable
     public UserProfile getUserByLogin(String login){
@@ -75,6 +81,11 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void logOut(String SessionID) {
         sessions.remove(SessionID);
+    }
+
+    @Override
+    public boolean isAuthorized(String SessionID){
+        return sessions.containsKey(SessionID);
     }
 }
 
