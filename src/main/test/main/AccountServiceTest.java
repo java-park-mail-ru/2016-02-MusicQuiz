@@ -18,8 +18,12 @@ public class AccountServiceTest {
 
     @Test
     public void testAddUser() throws Exception {
-        final boolean result = accountService.addUser(new UserProfile("test", "testpass", "testemail"));
-        assertTrue(result);
+        UserProfile user = new UserProfile("test", "testpass", "testemail");
+        accountService.addUser(user);
+        if (accountService.getUser(user.getID()).equals(user))
+            assertTrue(true);
+        else
+            assertTrue(false);
     }
 
     @Test
