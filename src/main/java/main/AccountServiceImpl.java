@@ -15,8 +15,10 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public boolean addUser(UserProfile userProfile) {
-        if(users.containsKey(userProfile.getID()))
-            return false;
+        for (UserProfile user : users.values()) {
+            if (user.getEmail().equals(userProfile.getEmail()))
+                return false;
+        }
         users.put(userProfile.getID(), userProfile);
         return true;
     }
