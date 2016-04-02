@@ -3,6 +3,7 @@ package rest;
 import main.AccountService;
 import main.AccountServiceImpl;
 import main.Context;
+import org.eclipse.jetty.server.Response;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -15,6 +16,8 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 
 public class ServletTest extends JerseyTest {
@@ -46,13 +49,19 @@ public class ServletTest extends JerseyTest {
 
     @Test
     public void testGetAdminUser() {
-        final String adminJson = target("user").path("0").request().get(String.class);
-        assertEquals("{ \n\t\"id\": 0, \n\t\"login\": \"admin\", \n\t\"email\": \"admin@email\"\n}\n", adminJson);
+        final javax.ws.rs.core.Response resp = target("user").path("0").request().get();
+        if (resp.getStatus() == 200) {
+            final String adminJson = target("user").path("0").request().get(String.class);
+            System.out.println(resp.getStatus());
+            assertEquals("{ \n\t\"id\": 0, \n\t\"login\": \"admin\", \n\t\"email\": \"admin@email\"\n}\n", adminJson);
+        }
+        else
+            assertTrue(false);
     }
 
     @Test
     public void testGetNewUser() {
-        final String adminJson = target("user").path("2").request().get(String.class);
-        assertEquals("{}\n", adminJson);
+        final javax.ws.rs.core.Response resp = target("user").path("2").request().get();
+        assertEquals(401, resp.getStatus());
     }
 }

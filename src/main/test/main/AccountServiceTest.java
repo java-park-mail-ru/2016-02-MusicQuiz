@@ -19,6 +19,7 @@ public class AccountServiceTest {
     }
 
     @Test
+
     public void testAddUser(){
         accountService.addUser(testUser);
         accountService.addUser(testUser);
