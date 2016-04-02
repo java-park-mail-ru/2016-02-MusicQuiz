@@ -25,10 +25,7 @@ public class UserProfile {
     }
 
     public UserProfile(UserProfile user) {
-        this.id = ID_GENERATOR.getAndIncrement();
-        this.login = user.login;
-        this.password = user.password;
-        this.email = user.email;
+        this(user.login, user.password, user.email);
     }
 
     public UserProfile(@NotNull String login, @NotNull String password, @NotNull String email){
@@ -36,6 +33,29 @@ public class UserProfile {
         this.login = login;
         this.password = password;
         this.email = email;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == this)
+            return true;
+
+        if(obj == null)
+            return false;
+
+        if(!(getClass() == obj.getClass()))
+            return false;
+
+        else{
+            UserProfile tmp = (UserProfile) obj;
+            return tmp.id==this.id;
+        }
+    }
+
+    @Override
+    public int hashCode(){
+        Long identificator = this.id;
+        return identificator.hashCode();
     }
 
     public long getID() {

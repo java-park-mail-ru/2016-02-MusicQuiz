@@ -3,6 +3,7 @@ package main;
 import org.jetbrains.annotations.Nullable;
 import rest.UserProfile;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +13,12 @@ import java.util.Map;
 public class AccountServiceImpl implements AccountService {
     private Map<Long, UserProfile> users = new HashMap<>();
     private Map<String, UserProfile> sessions = new HashMap<>();
+
+
+    @Override
+    public Collection<UserProfile> getAllUsers() {
+        return users.values();
+    }
 
     @Override
     public boolean addUser(UserProfile userProfile) {

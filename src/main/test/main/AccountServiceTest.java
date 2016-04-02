@@ -1,15 +1,17 @@
 package main;
 
-import org.jetbrains.annotations.Nullable;
 import org.junit.Before;
 import org.junit.Test;
 import rest.UserProfile;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import java.util.Collection;
+
+import static org.junit.Assert.*;
 
 public class AccountServiceTest {
     private AccountServiceImpl accountService;
+
+    final UserProfile testUser = new UserProfile("test", "testpass", "testemail");
 
     @Before
     public void setupAccountService(){
@@ -17,70 +19,55 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void testAddUser() throws Exception {
-        final boolean result = accountService.addUser(new UserProfile("test", "testpass", "testemail"));
-        assertTrue(result);
-    }
-
-    @Test
-    public void testAddSameUserFail(){
-        accountService.addUser(new UserProfile("test", "testpass", "testemail"));
-        final boolean result = accountService.addUser(new UserProfile("test", "testpass", "testemail"));
-        assertFalse(result);
+    public void testAddUser(){
+        accountService.addUser(testUser);
+        accountService.addUser(testUser);
+        Collection <UserProfile> allUsers = accountService.getAllUsers();
+        allUsers.toArray();
+        int numberOfAddedUsers = 0;
+        for(UserProfile user : allUsers){
+            if(user.getEmail().equals(testUser.getEmail()))
+                numberOfAddedUsers++;
+        }
+        assertTrue(numberOfAddedUsers == 1);
     }
 
     @Test
     public void testGetRealUser() {
-        UserProfile user= new UserProfile("real", "realpass", "realemail");
-        accountService.addUser(user);
-        final UserProfile trueuser = accountService.getUser(user.getID());
-        if (trueuser == null)
-            assertTrue(false);
-        else
-            assertTrue(true);
+        accountService.addUser(testUser);
+        final UserProfile trueUser = accountService.getUser(testUser.getID());
+        assertNotNull(trueUser);
     }
 
     @Test
     public void testGetUnrealUser() {
-        UserProfile user= new UserProfile("real", "realpass", "realemail1");
-        accountService.addUser(user);
-        final UserProfile falseuser = accountService.getUser(user.getID()+1);
-        if (falseuser == null)
-            assertFalse(false);
-        else
-            assertFalse(true);
+        accountService.addUser(testUser);
+        final UserProfile falseUser = accountService.getUser(testUser.getID()+1);
+        assertNull(falseUser);
     }
 
     @Test
     public void testGetDeletedUser() {
-        UserProfile user= new UserProfile("real", "realpass", "realemail2");
-        accountService.addUser(user);
-        accountService.deleteUser(user.getID());
-        final UserProfile falseuser = accountService.getUser(user.getID());
-        if (falseuser == null)
-            assertFalse(false);
-        else
-            assertFalse(true);
+        accountService.addUser(testUser);
+        accountService.deleteUser(testUser.getID());
+        final UserProfile falseUser = accountService.getUser(testUser.getID());
+        assertNull(falseUser);
     }
 
     @Test
     public void testGetUserByRealSession() {
-        UserProfile currentuser = new UserProfile("test", "testpass", "testemail");
-        accountService.logIn("0", currentuser);
+        accountService.logIn("0", testUser);
         UserProfile user = accountService.getUserBySession("0");
-        if (user!=null && user.equals(currentuser))
-            assertTrue(true);
-        else
-            assertTrue(false);
+        assertNotNull(user);
+        assertEquals(user, testUser);
     }
 
     @Test
     public void testGetUserByUnrealSession() {
-        UserProfile currentuser = new UserProfile("test", "testpass", "testemail");
-        accountService.addUser(currentuser);
-        accountService.logIn("0", currentuser);
+        accountService.addUser(testUser);
+        accountService.logIn("0", testUser);
         UserProfile user = accountService.getUserBySession("1");
-        if (user != null && user.equals(currentuser))
+        if (user != null && user.equals(testUser))
             assertFalse(true);
         else
             assertFalse(false);
@@ -88,74 +75,52 @@ public class AccountServiceTest {
 
     @Test
     public void testGetUserByRealLogin() {
-        UserProfile currentuser = new UserProfile("test", "testpass", "testemail");
-        accountService.addUser(currentuser);
+        accountService.addUser(testUser);
         UserProfile user = accountService.getUserByLogin("test");
-        if (user != null && user.getLogin().equals("test") && user.getEmail().equals("testemail"))
-            assertTrue(true);
-        else
-            assertTrue(false);
+        assertNotNull(user);
+        assertEquals(user, testUser);
     }
 
     @Test
     public void testGetUserByUnrealLogin() {
-        UserProfile currentuser = new UserProfile("test", "testpass", "testemail");
-        accountService.addUser(currentuser);
-        UserProfile user = accountService.getUserByLogin("test1");
-        if (user != null && user.getLogin().equals("test") && user.getEmail().equals("testemail"))
+        accountService.addUser(testUser);
+        UserProfile user = accountService.getUserByLogin("1");
+        if (user != null && user.equals(testUser))
             assertFalse(true);
         else
             assertFalse(false);
     }
 
+    @SuppressWarnings("all")
     @Test
     public void testDeleteRealUser() {
-        UserProfile currentuser = new UserProfile("test", "testpass", "testemail");
-        accountService.addUser(currentuser);
+        accountService.addUser(testUser);
         Long id = accountService.getUserByLogin("test").getID();
-        if (id != null) {
-            accountService.deleteUser(id);
-            UserProfile user = accountService.getUser(id);
-            if (user == null)
-                assertTrue(true);
-            else
-                assertTrue(false);
-        }
+        accountService.deleteUser(id);
+        UserProfile user = accountService.getUser(id);
+        assertNull(user);
     }
 
     @Test
     public void testUpdateUser() {
-        UserProfile user = new UserProfile("test", "testpass", "testemail");
-        accountService.addUser(user);
-        UserProfile changeduser = new UserProfile("test1", "testpass1", "testemail");
-        accountService.updateUser(user,changeduser);
-        if (user.getEmail().equals(changeduser.getEmail()) && user.getLogin().equals(changeduser.getLogin() )
-                    && user.getPassword().equals(changeduser.getPassword()))
-            assertTrue(true);
-        else
-            assertTrue(false);
+        accountService.addUser(testUser);
+        UserProfile changeduser = new UserProfile("test1", "testpass1", "testemail1");
+        accountService.updateUser(testUser,changeduser);
+        assertEquals(testUser.getLogin() + testUser.getEmail() + testUser.getPassword(),changeduser.getLogin() + changeduser.getEmail() + changeduser.getPassword());
     }
 
     @Test
     public void testIsAuthorized() {
-        UserProfile user = new UserProfile("test", "testpass", "testemail");
-        accountService.addUser(user);
-        accountService.logIn("0", user);
-        if (accountService.isAuthorized("0"))
-            assertTrue(true);
-        else
-            assertTrue(false);
+        accountService.addUser(testUser);
+        accountService.logIn("0", testUser);
+        assertTrue(accountService.isAuthorized("0"));
     }
 
     @Test
     public void testIsNotAuthorized() {
-        UserProfile user = new UserProfile("test", "testpass", "testemail");
-        accountService.addUser(user);
-        accountService.logIn("0", user);
+        accountService.addUser(testUser);
+        accountService.logIn("0", testUser);
         accountService.logOut("0");
-        if (accountService.isAuthorized("0"))
-            assertFalse(true);
-        else
-            assertFalse(false);
+        assertFalse(accountService.isAuthorized("0"));
     }
 }

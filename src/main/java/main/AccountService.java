@@ -3,6 +3,7 @@ package main;
 import org.jetbrains.annotations.Nullable;
 import rest.UserProfile;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +12,8 @@ import java.util.Map;
  */
 
 public interface AccountService {
+
+    Collection<UserProfile> getAllUsers();
 
     boolean addUser(UserProfile userProfile);
 

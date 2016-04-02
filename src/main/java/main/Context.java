@@ -13,6 +13,10 @@ public class Context {
     private final Map<Class, Object> contextMap = new HashMap<>();
 
     public void put(@NotNull Class clazz, @NotNull Object object){
+        if(contextMap.containsKey(clazz)){
+            System.out.println("ERROR: This class is already added to the context!");
+            return;
+        }
         contextMap.put(clazz, object);
     }
 
