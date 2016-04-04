@@ -1,23 +1,24 @@
 package rest;
 
+import junit.framework.Assert;
 import main.AccountService;
 import main.AccountServiceImpl;
 import main.Context;
-import org.eclipse.jetty.server.Response;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
+import static org.junit.Assert.*;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.omg.CORBA.Object;
 
-import javax.security.auth.login.Configuration;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.Response;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 
 public class ServletTest extends JerseyTest {
@@ -45,14 +46,22 @@ public class ServletTest extends JerseyTest {
     public void initialize() {
         target("user").request().put(Entity.json("{\"login\":\"admin\",\"password\":\"admin\", \"email\":\"admin@email\"}"));
         target("user").request().put(Entity.json("{\"login\":\"guest\",\"password\":\"guest\", \"email\":\"guest@email\"}"));
+        target("session").request().put(Entity.json("{\"login\":\"admin\",\"password\":\"admin\", \"email\":\"admin@email\"}"));
+    }
+
+    @After
+    public void test(){
+        Object obj = null;
+        assertNull(obj);
+        System.out.println("end");
     }
 
     @Test
     public void testGetAdminUser() {
-        final javax.ws.rs.core.Response resp = target("user").path("0").request().get();
+        final Response resp = target("user").path("0").request().get();
+        System.out.print(resp.getStatus());
         if (resp.getStatus() == 200) {
             final String adminJson = target("user").path("0").request().get(String.class);
-            System.out.println(resp.getStatus());
             assertEquals("{ \n\t\"id\": 0, \n\t\"login\": \"admin\", \n\t\"email\": \"admin@email\"\n}\n", adminJson);
         }
         else
@@ -61,7 +70,8 @@ public class ServletTest extends JerseyTest {
 
     @Test
     public void testGetNewUser() {
-        final javax.ws.rs.core.Response resp = target("user").path("2").request().get();
+        final Response resp = target("user").path("2").request().get();
+        System.out.print(resp.getStatus());
         assertEquals(401, resp.getStatus());
     }
 }
