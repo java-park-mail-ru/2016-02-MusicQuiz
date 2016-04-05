@@ -31,4 +31,7 @@ public interface AccountService {
     void logOut(String SessionID);
 
     boolean isAuthorized(String SessionID);
+
+    @Nullable
+    UsersDataSet getUserByEmail(String email);
 }

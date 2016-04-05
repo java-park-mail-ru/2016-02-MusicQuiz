@@ -102,5 +102,13 @@ public class AccountServiceImpl implements AccountService {
     public boolean isAuthorized(String SessionID){
         return sessions.containsKey(SessionID);
     }
+
+    @Nullable
+    @Override
+    public UsersDataSet getUserByEmail(String email){
+        Session session = factory.openSession();
+        UsersDAO dao = new UsersDAO(session);
+        return dao.getUserByEmail(email);
+    }
 }
 

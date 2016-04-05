@@ -1,5 +1,6 @@
 package rest;
 
+import database.UsersDataSet;
 import main.AccountService;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +47,7 @@ public class Sessions {
         final AccountService accountService = context.get(AccountService.class);
         final String SessionID = getCookie(request);
         if(SessionID != null && accountService.isAuthorized(SessionID)) {
-            UserProfile user = accountService.getUserBySession(SessionID);
+            UsersDataSet user = accountService.getUserBySession(SessionID);
             if(user != null) {
                 String jsonStr200 = "{\n\t\"id\": " + user.getID() + "\n}\n";
                 return Response.status(Response.Status.OK).entity(jsonStr200).build();
@@ -58,10 +59,10 @@ public class Sessions {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addSession(UserProfile user, @Context HttpServletRequest request, @Context HttpServletResponse response) {
+    public Response addSession(UsersDataSet user, @Context HttpServletRequest request, @Context HttpServletResponse response) {
         final AccountService accountService = context.get(AccountService.class);
         final String SessionID = request.getSession().getId();
-        UserProfile currentUser = accountService.getUserByLogin(user.getLogin());
+        UsersDataSet currentUser = accountService.getUserByEmail(user.getLogin());
         if(currentUser != null && currentUser.getPassword().equals(user.getPassword())) {
             String jsonStr200 = "{\n\t\"id\": " + currentUser.getID() +"\n}\n";
             accountService.logIn(SessionID, currentUser);

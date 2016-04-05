@@ -1,5 +1,6 @@
 package rest;
 
+import database.UsersDataSet;
 import main.AccountService;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,7 +42,7 @@ public class Users {
     @Path("{id}")
     public Response getUserByID(@PathParam("id") Long id) {
         final AccountService accountService = context.get(AccountService.class);
-        final UserProfile user = accountService.getUser(id);
+        final UsersDataSet user = accountService.getUser(id);
         if(user == null) {
             return Response.status(Response.Status.UNAUTHORIZED).entity("{}\n").build();
         }
@@ -56,9 +57,9 @@ public class Users {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createUser(UserProfile user){
+    public Response createUser(UsersDataSet user){
         final AccountService accountService = context.get(AccountService.class);
-        UserProfile currentUser = new UserProfile(user);
+        UsersDataSet currentUser = new UsersDataSet(user);
         String jsonStr = "{ \n\t\"id\": " + currentUser.getID() +"\n}\n";
         if(accountService.addUser(currentUser)){
             return Response.status(Response.Status.OK).entity(jsonStr).build();
@@ -71,7 +72,7 @@ public class Users {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateUser(@PathParam("id") Long id, UserProfile user, @Context HttpServletRequest request) {
+    public Response updateUser(@PathParam("id") Long id, UsersDataSet user, @Context HttpServletRequest request) {
         final AccountService accountService = context.get(AccountService.class);
         final String SessionID = getCookie(request);
         if(SessionID == null || !accountService.isAuthorized(SessionID)) {
@@ -81,7 +82,7 @@ public class Users {
             return Response.status(Response.Status.FORBIDDEN).entity(jsonStr403).build();
         }
         else {
-            UserProfile currentUser = accountService.getUserBySession(SessionID);
+            UsersDataSet currentUser = accountService.getUserBySession(SessionID);
             if(currentUser != null){
                 accountService.updateUser(currentUser, user);
                 String jsonStr200 = "{\n\t\"id\": " + currentUser.getID() +"\n}\n";
