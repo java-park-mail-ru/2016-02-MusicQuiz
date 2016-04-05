@@ -1,22 +1,40 @@
 package main;
 
+import database.Config;
+import database.UsersDataSet;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
 import org.jetbrains.annotations.Nullable;
-import rest.UserProfile;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  * Created by seven-teen on 30.03.16.
  */
 public class AccountServiceImpl implements AccountService {
-    private Map<Long, UserProfile> users = new HashMap<>();
-    private Map<String, UserProfile> sessions = new HashMap<>();
+    private Map<String, UsersDataSet> sessions = new HashMap<>();
 
+    private final SessionFactory factory;
 
-    @Override
-    public Collection<UserProfile> getAllUsers() {
+    public AccountServiceImpl(String dbName) {
+        final Configuration configuration = Config.getConfiguration(dbName);
+        factory = createSessionFactory(configuration);
+    }
+
+    private static SessionFactory createSessionFactory(Configuration config) {
+        final StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder();
+        builder.applySettings(config.getProperties());
+        final ServiceRegistry serviceRegistry = builder.build();
+        return config.buildSessionFactory(serviceRegistry);
+    }
+
+/*    @Override
+    public Collection<UsersDataSet> getAllUsers() {
         return users.values();
     }
 
@@ -95,6 +113,6 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public boolean isAuthorized(String SessionID){
         return sessions.containsKey(SessionID);
-    }
+    }*/
 }
 

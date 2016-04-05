@@ -29,7 +29,7 @@ public class Main {
         final ServletContextHandler contextHandler = new ServletContextHandler(server, "/api/", ServletContextHandler.SESSIONS);
 
         final Context context = new Context();
-        context.put(AccountService.class, new AccountServiceImpl());
+        context.put(AccountService.class, new AccountServiceImpl("Music_Quiz"));
 
         final ResourceConfig config = new ResourceConfig(Users.class, Sessions.class);
         config.register(new AbstractBinder() {

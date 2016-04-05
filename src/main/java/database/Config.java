@@ -1,6 +1,5 @@
-package main;
+package database;
 
-import database.UsersDataSet;
 import org.hibernate.cfg.Configuration;
 
 /**
@@ -18,6 +17,7 @@ public class Config {
         configuration.setProperty("hibernate.connection.password", "1234");
         configuration.setProperty("hibernate.show_sql", "true");
         configuration.setProperty("hibernate.hbm2ddl.auto", "update");
+        //hibernate.connection.pool_size;
         return configuration;
     }
 }

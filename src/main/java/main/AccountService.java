@@ -1,11 +1,9 @@
 package main;
 
+import database.UsersDataSet;
 import org.jetbrains.annotations.Nullable;
-import rest.UserProfile;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by IlyaRogov on 29.02.16.
@@ -13,25 +11,25 @@ import java.util.Map;
 
 public interface AccountService {
 
-    Collection<UserProfile> getAllUsers();
+    Collection<UsersDataSet> getAllUsers();
 
-    boolean addUser(UserProfile userProfile);
+    boolean addUser(UsersDataSet userProfile);
 
-    UserProfile getUser(Long id);
-
-    @Nullable
-    UserProfile getUserBySession(String SessionID);
+    UsersDataSet getUser(Long id);
 
     @Nullable
-    UserProfile getUserByLogin(String login);
+    UsersDataSet getUserBySession(String SessionID);
+
+    @Nullable
+    UsersDataSet getUserByLogin(String login);
 
     void deleteUser(Long id);
 
     void print_sessions();
 
-    void updateUser(UserProfile user, UserProfile changedUser);
+    void updateUser(UsersDataSet user, UsersDataSet changedUser);
 
-    void logIn(String SessionID, UserProfile user);
+    void logIn(String SessionID, UsersDataSet user);
 
     void logOut(String SessionID);
 
