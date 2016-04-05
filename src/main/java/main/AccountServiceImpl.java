@@ -34,13 +34,13 @@ public class AccountServiceImpl implements AccountService {
         return config.buildSessionFactory(serviceRegistry);
     }
 
-/*    @Override
+    @Override
     public Collection<UsersDataSet> getAllUsers() {
         Session session = factory.openSession();
         UsersDAO dao = new UsersDAO(session);
         return dao.getAllUsers();
     }
-*/
+
     @Override
     public boolean addUser(UsersDataSet user) {
         Session session = factory.openSession();
