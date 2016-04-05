@@ -11,7 +11,7 @@ import java.util.Collection;
 
 public interface AccountService {
 
-    //Collection<UsersDataSet> getAllUsers();
+    Collection<UsersDataSet> getAllUsers();
 
     boolean addUser(UsersDataSet userProfile);
 

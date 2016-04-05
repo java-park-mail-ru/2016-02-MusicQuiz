@@ -7,6 +7,9 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * Created by seven-teen on 05.04.16.
  */
@@ -72,6 +75,18 @@ public class UsersDAO {
             return (UsersDataSet)criteria.add(Restrictions.eq("email", email)).uniqueResult();
         }
         catch(HibernateException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Nullable
+    public Collection<UsersDataSet> getAllUsers() {
+        final Criteria criteria = session.createCriteria(UsersDataSet.class);
+        try {
+            return (List<UsersDataSet>)criteria.list();
+        }
+        catch (HibernateException e){
             e.printStackTrace();
         }
         return null;
