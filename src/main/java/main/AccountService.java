@@ -11,7 +11,7 @@ import java.util.Collection;
 
 public interface AccountService {
 
-    Collection<UsersDataSet> getAllUsers();
+    //Collection<UsersDataSet> getAllUsers();
 
     boolean addUser(UsersDataSet userProfile);
 
@@ -19,9 +19,6 @@ public interface AccountService {
 
     @Nullable
     UsersDataSet getUserBySession(String SessionID);
-
-    @Nullable
-    UsersDataSet getUserByLogin(String login);
 
     void deleteUser(Long id);
 

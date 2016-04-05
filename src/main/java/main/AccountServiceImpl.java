@@ -1,7 +1,7 @@
 package main;
 
-import database.Config;
-import database.UsersDataSet;
+import database.*;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -17,12 +17,13 @@ import java.util.Map;
  * Created by seven-teen on 30.03.16.
  */
 public class AccountServiceImpl implements AccountService {
-    private Map<String, UsersDataSet> sessions = new HashMap<>();
+    private Map<String, UsersDataSet> sessions;
 
     private final SessionFactory factory;
 
     public AccountServiceImpl(String dbName) {
         final Configuration configuration = Config.getConfiguration(dbName);
+        sessions = new HashMap<>();
         factory = createSessionFactory(configuration);
     }
 
@@ -35,33 +36,38 @@ public class AccountServiceImpl implements AccountService {
 
 /*    @Override
     public Collection<UsersDataSet> getAllUsers() {
-        return users.values();
+        Session session = factory.openSession();
+        UsersDAO dao = new UsersDAO(session);
+        return dao.getAllUsers();
     }
-
+*/
     @Override
-    public boolean addUser(UserProfile userProfile) {
-        for (UserProfile user : users.values()) {
-            if (user.getEmail().equals(userProfile.getEmail()))
-                return false;
+    public boolean addUser(UsersDataSet user) {
+        Session session = factory.openSession();
+        UsersDAO dao = new UsersDAO(session);
+        if (dao.getUserByEmail(user.getEmail()) == null) {
+            dao.addUser(user);
+            return true;
         }
-        users.put(userProfile.getID(), userProfile);
-        return true;
+        return false;
     }
 
     @Override
-    public UserProfile getUser(Long id) {
-        return users.get(id);
+    public UsersDataSet getUser(Long id) {
+        Session session = factory.openSession();
+        UsersDAO dao = new UsersDAO(session);
+        return dao.getUser(id);
     }
 
     @Override
     @Nullable
-    public UserProfile getUserBySession(String SessionID) {
-        if(sessions.containsKey(SessionID)) {
+    public UsersDataSet getUserBySession(String SessionID) {
+        if (sessions.containsKey(SessionID))
             return sessions.get(SessionID);
-        }
-        else return null;
+        return null;
     }
 
+    @Override
     public void print_sessions() {
         for (String s : sessions.keySet()) {
             System.out.println(s);
@@ -69,39 +75,21 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @Nullable
-    public UserProfile getUserByLogin(String login){
-        for(UserProfile user : users.values()){
-            if(user.getLogin().equals(login)){
-                return user;
-            }
-        }
-        return null;
-    }
-
-    @Override
     public void deleteUser(Long id) {
-        users.remove(id);
+        Session session = factory.openSession();
+        UsersDAO dao = new UsersDAO(session);
+        dao.deleteUser(dao.getUser(id));
     }
 
     @Override
-    public void updateUser(UserProfile user, UserProfile changedUser) {
-        if(!user.getLogin().equals(changedUser.getLogin())) {
-            user.setLogin(changedUser.getLogin());
-        }
-
-        if(!user.getPassword().equals(changedUser.getPassword())) {
-            user.setPassword(changedUser.getPassword());
-        }
-
-        if(!user.getEmail().equals(changedUser.getEmail())) {
-            user.setEmail(changedUser.getEmail());
-        }
-
+    public void updateUser(UsersDataSet user, UsersDataSet changedUser) {
+        Session session = factory.openSession();
+        UsersDAO dao = new UsersDAO(session);
+        dao.updateUser(user, changedUser);
     }
 
     @Override
-    public void logIn(String SessionID, UserProfile user) {
+    public void logIn(String SessionID, UsersDataSet user) {
         sessions.put(SessionID, user);
     }
 
@@ -113,6 +101,6 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public boolean isAuthorized(String SessionID){
         return sessions.containsKey(SessionID);
-    }*/
+    }
 }
 
