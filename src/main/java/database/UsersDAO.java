@@ -1,7 +1,10 @@
 package database;
 
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -17,39 +20,60 @@ public class UsersDAO {
         try {
             return session.get(UsersDataSet.class, id);
         }
-        catch(HibernateException e){
+        catch(HibernateException e) {
             e.printStackTrace();
         }
-        return null;
+            return null;
     }
 
     public void addUser(UsersDataSet user){
+        final Transaction trx = session.beginTransaction();
         try {
             session.save(user);
+            trx.commit();
         }
         catch(HibernateException e){
             e.printStackTrace();
+            trx.rollback();
         }
     }
 
     public void updateUser(UsersDataSet currentUser, UsersDataSet newUser){
+        final Transaction trx = session.beginTransaction();
         try{
             currentUser.setEmail(newUser.getEmail());
             currentUser.setLogin(newUser.getLogin());
             currentUser.setPassword(newUser.getPassword());
             session.update(currentUser);
+            trx.commit();
         }
         catch (HibernateException e){
             e.printStackTrace();
+            trx.rollback();
         }
     }
 
     public void deleteUser(UsersDataSet user){
+        final Transaction trx = session.beginTransaction();
         try{
             session.delete(user);
+            trx.commit();
         }
         catch (HibernateException e){
             e.printStackTrace();
+            trx.rollback();
         }
+    }
+
+    @Nullable
+    public UsersDataSet getUserByEmail(String email){
+        final Criteria criteria = session.createCriteria(UsersDataSet.class);
+        try{
+            return (UsersDataSet)criteria.add(Restrictions.eq("email", email)).uniqueResult();
+        }
+        catch(HibernateException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
