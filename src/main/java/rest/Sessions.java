@@ -62,7 +62,7 @@ public class Sessions {
     public Response addSession(UsersDataSet user, @Context HttpServletRequest request, @Context HttpServletResponse response) {
         final AccountService accountService = context.get(AccountService.class);
         final String SessionID = request.getSession().getId();
-        UsersDataSet currentUser = accountService.getUserByEmail(user.getLogin());
+        UsersDataSet currentUser = accountService.getUserByEmail(user.getEmail());
         if(currentUser != null && currentUser.getPassword().equals(user.getPassword())) {
             String jsonStr200 = "{\n\t\"id\": " + currentUser.getID() +"\n}\n";
             accountService.logIn(SessionID, currentUser);

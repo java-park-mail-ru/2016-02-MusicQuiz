@@ -29,12 +29,12 @@ public class UsersDataSet {
     @NotNull
     private String email;
 
-    @SuppressWarnings("unused")
+
     public UsersDataSet() {
         id = -1;
-        login = "l";
-        password = "p";
-        email = "e";
+        login = "";
+        password = "";
+        email = "";
     }
 
     public UsersDataSet(UsersDataSet user) {
