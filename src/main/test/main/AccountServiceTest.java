@@ -24,11 +24,15 @@ public class AccountServiceTest {
         accountService.addUser(testUser);
         accountService.addUser(testUser);
         Collection <UsersDataSet> allUsers = accountService.getAllUsers();
-        allUsers.toArray();
+        if(allUsers != null){
+            allUsers.toArray();
+        }
         int numberOfAddedUsers = 0;
-        for(UsersDataSet user : allUsers){
-            if(user.getEmail().equals(testUser.getEmail()))
-                numberOfAddedUsers++;
+        if(allUsers != null) {
+            for (UsersDataSet user : allUsers) {
+                if (user.getEmail().equals(testUser.getEmail()))
+                    numberOfAddedUsers++;
+            }
         }
         assertTrue(numberOfAddedUsers == 1);
     }

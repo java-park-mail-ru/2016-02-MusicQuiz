@@ -26,6 +26,8 @@ import static org.mockito.Mockito.mock;
 public class ServletTest extends JerseyTest {
 
     private static String userID;
+    private static final int RESPONSE_OK = 200;
+    private static final int UNAUTHORIZED = 401;
 
     @Override
     protected Application configure() {
@@ -65,7 +67,7 @@ public class ServletTest extends JerseyTest {
     public void testGetUser() {
         final Response resp = target("user").path(userID).request().get();
         System.out.print(resp.getStatus());
-        if (resp.getStatus() == 200) {
+        if (resp.getStatus() == RESPONSE_OK) {
             final String getResp = target("user").path(userID).request().get(String.class);
             String [] respString = getResp.split("\n");
             String email = "\t\"email\": \"admin@email\"";
@@ -77,7 +79,7 @@ public class ServletTest extends JerseyTest {
     @Test
     public void testGetUnrealUser() {
         final Response resp = target("user").path("0").request().get();
-        assertEquals(401, resp.getStatus());
+        assertEquals(UNAUTHORIZED, resp.getStatus());
     }
 
     @Test
@@ -87,7 +89,7 @@ public class ServletTest extends JerseyTest {
         String email = "\t\"email\": \"tst@email\"";
         String testUser = '{' + login + password + email + '}';
         final Response resp = target("user").request().put(Entity.json(testUser));
-        if(resp.getStatus() == 200){
+        if(resp.getStatus() == RESPONSE_OK){
             String message = resp.readEntity(String.class);
             Pattern pattern = Pattern.compile("\\d+");
             Matcher matcher = pattern.matcher(message);

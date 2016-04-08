@@ -27,17 +27,17 @@ public class Sessions {
 
     @Nullable
     private static String getCookie(HttpServletRequest request){
-        String SessionID = null;
+        String sessionID = null;
         Cookie[] cookies = request.getCookies();
         if(cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("MusicQuiz")) {
-                    SessionID = cookie.getValue();
+                    sessionID = cookie.getValue();
                     break;
                 }
             }
         }
-        return SessionID;
+        return sessionID;
     }
 
     @GET
@@ -45,9 +45,9 @@ public class Sessions {
     @Produces(MediaType.APPLICATION_JSON)
     public Response isAuthenticated(@Context HttpServletRequest request) {
         final AccountService accountService = context.get(AccountService.class);
-        final String SessionID = getCookie(request);
-        if(SessionID != null && accountService.isAuthorized(SessionID)) {
-            UsersDataSet user = accountService.getUserBySession(SessionID);
+        final String sessionID = getCookie(request);
+        if(sessionID != null && accountService.isAuthorized(sessionID)) {
+            UsersDataSet user = accountService.getUserBySession(sessionID);
             if(user != null) {
                 String jsonStr200 = "{\n\t\"id\": " + user.getID() + "\n}\n";
                 return Response.status(Response.Status.OK).entity(jsonStr200).build();
@@ -61,12 +61,12 @@ public class Sessions {
     @Produces(MediaType.APPLICATION_JSON)
     public Response addSession(UsersDataSet user, @Context HttpServletRequest request, @Context HttpServletResponse response) {
         final AccountService accountService = context.get(AccountService.class);
-        final String SessionID = request.getSession().getId();
+        final String sessionID = request.getSession().getId();
         UsersDataSet currentUser = accountService.getUserByEmail(user.getEmail());
         if(currentUser != null && currentUser.getPassword().equals(user.getPassword())) {
             String jsonStr200 = "{\n\t\"id\": " + currentUser.getID() +"\n}\n";
-            accountService.logIn(SessionID, currentUser);
-            Cookie cookie = new Cookie("MusicQuiz", SessionID);
+            accountService.logIn(sessionID, currentUser);
+            Cookie cookie = new Cookie("MusicQuiz", sessionID);
             response.addCookie(cookie);
             return Response.status(Response.Status.OK).entity(jsonStr200).build();
         }
@@ -78,10 +78,10 @@ public class Sessions {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteSession(@Context HttpServletRequest request) {
-        final String SessionID = getCookie(request);
+        final String sessionID = getCookie(request);
         final AccountService accountService = context.get(AccountService.class);
-        if(SessionID != null && accountService.isAuthorized(SessionID)) {
-            accountService.logOut(SessionID);
+        if(sessionID != null && accountService.isAuthorized(sessionID)) {
+            accountService.logOut(sessionID);
         }
         return Response.status(Response.Status.OK).entity("{}\n").build();
     }

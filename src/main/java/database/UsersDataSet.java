@@ -13,7 +13,7 @@ public class UsersDataSet {
     @Id
     @Column(name="Id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private long userID;
 
     @Column(name="Login")
     @NotNull
@@ -27,9 +27,9 @@ public class UsersDataSet {
     @NotNull
     private String email;
 
-
+    @SuppressWarnings("unused")
     public UsersDataSet() {
-        id = -1;
+        userID = -1;
         login = "";
         password = "";
         email = "";
@@ -40,7 +40,7 @@ public class UsersDataSet {
     }
 
     public UsersDataSet(@NotNull String login, @NotNull String password, @NotNull String email){
-        this.id = 0;
+        this.userID = 0;
         this.login = login;
         this.password = password;
         this.email = email;
@@ -59,18 +59,18 @@ public class UsersDataSet {
 
         else{
             UsersDataSet tmp = (UsersDataSet) obj;
-            return tmp.id==this.id;
+            return tmp.userID==this.userID;
         }
     }
 
     @Override
     public int hashCode(){
-        Long identificator = this.id;
+        Long identificator = this.userID;
         return identificator.hashCode();
     }
 
     public long getID() {
-        return this.id;
+        return this.userID;
     }
 
     @NotNull

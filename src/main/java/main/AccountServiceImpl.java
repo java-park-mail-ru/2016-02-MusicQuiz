@@ -34,6 +34,7 @@ public class AccountServiceImpl implements AccountService {
         return config.buildSessionFactory(serviceRegistry);
     }
 
+    @Nullable
     @Override
     public Collection<UsersDataSet> getAllUsers() {
         Session session = factory.openSession();
@@ -52,6 +53,7 @@ public class AccountServiceImpl implements AccountService {
         return false;
     }
 
+    @Nullable
     @Override
     public UsersDataSet getUser(Long id) {
         Session session = factory.openSession();
@@ -61,14 +63,14 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Nullable
-    public UsersDataSet getUserBySession(String SessionID) {
-        if (sessions.containsKey(SessionID))
-            return sessions.get(SessionID);
+    public UsersDataSet getUserBySession(String sessionID) {
+        if (sessions.containsKey(sessionID))
+            return sessions.get(sessionID);
         return null;
     }
 
     @Override
-    public void print_sessions() {
+    public void printSessions() {
         for (String s : sessions.keySet()) {
             System.out.println(s);
         }
@@ -78,7 +80,9 @@ public class AccountServiceImpl implements AccountService {
     public void deleteUser(Long id) {
         Session session = factory.openSession();
         UsersDAO dao = new UsersDAO(session);
-        dao.deleteUser(dao.getUser(id));
+        UsersDataSet user = (dao.getUser(id));
+        if(user != null)
+            dao.deleteUser(user);
     }
 
     @Override
@@ -89,18 +93,18 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void logIn(String SessionID, UsersDataSet user) {
-        sessions.put(SessionID, user);
+    public void logIn(String sessionID, UsersDataSet user) {
+        sessions.put(sessionID, user);
     }
 
     @Override
-    public void logOut(String SessionID) {
-        sessions.remove(SessionID);
+    public void logOut(String sessionID) {
+        sessions.remove(sessionID);
     }
 
     @Override
-    public boolean isAuthorized(String SessionID){
-        return sessions.containsKey(SessionID);
+    public boolean isAuthorized(String sessionID){
+        return sessions.containsKey(sessionID);
     }
 
     @Nullable
