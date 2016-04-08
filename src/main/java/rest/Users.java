@@ -60,8 +60,8 @@ public class Users {
     public Response createUser(UsersDataSet user){
         final AccountService accountService = context.get(AccountService.class);
         UsersDataSet currentUser = new UsersDataSet(user);
-        String jsonStr = "{ \n\t\"id\": " + currentUser.getID() +"\n}\n";
         if(accountService.addUser(currentUser)){
+            String jsonStr = "{ \n\t\"id\": " + currentUser.getID() +"\n}\n";
             return Response.status(Response.Status.OK).entity(jsonStr).build();
         } else {
             return Response.status(Response.Status.FORBIDDEN).entity("{}\n").build();

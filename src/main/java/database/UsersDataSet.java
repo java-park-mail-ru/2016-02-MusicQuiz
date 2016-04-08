@@ -3,7 +3,6 @@ package database;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by seven-teen on 03.04.16.
@@ -11,7 +10,6 @@ import java.util.concurrent.atomic.AtomicLong;
 @Entity
 @Table(name="User")
 public class UsersDataSet {
-    private static final AtomicLong ID_GENERATOR = new AtomicLong(0);
     @Id
     @Column(name="Id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +40,7 @@ public class UsersDataSet {
     }
 
     public UsersDataSet(@NotNull String login, @NotNull String password, @NotNull String email){
-        this.id = ID_GENERATOR.getAndIncrement();
+        this.id = 0;
         this.login = login;
         this.password = password;
         this.email = email;
