@@ -28,17 +28,17 @@ public class Users {
 
     @Nullable
     private static String getCookie(HttpServletRequest request){
-        String SessionID = null;
+        String sessionID = null;
         Cookie[] cookies = request.getCookies();
         if(cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("MusicQuiz")) {
-                    SessionID = cookie.getValue();
+                    sessionID = cookie.getValue();
                     break;
                 }
             }
         }
-        return SessionID;
+        return sessionID;
     }
 
     @GET
@@ -76,8 +76,8 @@ public class Users {
     public Response createUser(UsersDataSet user){
         final AccountService accountService = context.get(AccountService.class);
         UsersDataSet currentUser = new UsersDataSet(user);
-        String jsonStr = "{ \n\t\"id\": " + currentUser.getID() +"\n}\n";
         if(accountService.addUser(currentUser)){
+            String jsonStr = "{ \n\t\"id\": " + currentUser.getID() +"\n}\n";
             return Response.status(Response.Status.OK).entity(jsonStr).build();
         } else {
             return Response.status(Response.Status.FORBIDDEN).entity("{}\n").build();
@@ -90,15 +90,15 @@ public class Users {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateUser(@PathParam("id") Long id, UsersDataSet user, @Context HttpServletRequest request) {
         final AccountService accountService = context.get(AccountService.class);
-        final String SessionID = getCookie(request);
-        if(SessionID == null || !accountService.isAuthorized(SessionID)) {
+        final String sessionID = getCookie(request);
+        if(sessionID == null || !accountService.isAuthorized(sessionID)) {
             String jsonStr403 = "{ " +
                     "\n\t\"status\": 403, " +
                     "\n\t\"message\": \"Чужой юзер\" \n}\n";
             return Response.status(Response.Status.FORBIDDEN).entity(jsonStr403).build();
         }
         else {
-            UsersDataSet currentUser = accountService.getUserBySession(SessionID);
+            UsersDataSet currentUser = accountService.getUserBySession(sessionID);
             if(currentUser != null){
                 accountService.updateUser(currentUser, user);
                 String jsonStr200 = "{\n\t\"id\": " + currentUser.getID() +"\n}\n";
@@ -113,8 +113,8 @@ public class Users {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteUserByID(@PathParam("id") Long id, @Context HttpServletRequest request) {
         final AccountService accountService = context.get(AccountService.class);
-        final String SessionID = getCookie(request);
-        if(SessionID != null && accountService.isAuthorized(SessionID)) {
+        final String sessionID = getCookie(request);
+        if(sessionID != null && accountService.isAuthorized(sessionID)) {
             accountService.deleteUser(id);
             return Response.status(Response.Status.OK).entity("{}\n").build();
         }

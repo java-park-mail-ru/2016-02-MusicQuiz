@@ -18,19 +18,20 @@ public interface AccountService {
     UsersDataSet getUser(Long id);
 
     @Nullable
-    UsersDataSet getUserBySession(String SessionID);
+    UsersDataSet getUserBySession(String sessionID);
 
     void deleteUser(Long id);
 
-    void print_sessions();
+    @SuppressWarnings("unused")
+    void printSessions();
 
     void updateUser(UsersDataSet user, UsersDataSet changedUser);
 
-    void logIn(String SessionID, UsersDataSet user);
+    void logIn(String sessionID, UsersDataSet user);
 
-    void logOut(String SessionID);
+    void logOut(String sessionID);
 
-    boolean isAuthorized(String SessionID);
+    boolean isAuthorized(String sessionID);
 
     @Nullable
     UsersDataSet getUserByEmail(String email);

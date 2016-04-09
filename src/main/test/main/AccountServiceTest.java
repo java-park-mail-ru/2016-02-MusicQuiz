@@ -1,4 +1,6 @@
-/*package main;
+package main;
+
+import database.UsersDataSet;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -10,24 +12,27 @@ import static org.junit.Assert.*;
 public class AccountServiceTest {
     private AccountServiceImpl accountService;
 
-    final UserProfile testUser = new UserProfile("test", "testpass", "testemail");
+    final UsersDataSet testUser = new UsersDataSet("test", "testpass", "testemail");
 
     @Before
     public void setupAccountService(){
-        accountService = new AccountServiceImpl();
+        accountService = new AccountServiceImpl("Music_Quiz");
     }
 
     @Test
-
     public void testAddUser(){
         accountService.addUser(testUser);
         accountService.addUser(testUser);
-        Collection <UserProfile> allUsers = accountService.getAllUsers();
-        allUsers.toArray();
+        Collection <UsersDataSet> allUsers = accountService.getAllUsers();
+        if(allUsers != null){
+            allUsers.toArray();
+        }
         int numberOfAddedUsers = 0;
-        for(UserProfile user : allUsers){
-            if(user.getEmail().equals(testUser.getEmail()))
-                numberOfAddedUsers++;
+        if(allUsers != null) {
+            for (UsersDataSet user : allUsers) {
+                if (user.getEmail().equals(testUser.getEmail()))
+                    numberOfAddedUsers++;
+            }
         }
         assertTrue(numberOfAddedUsers == 1);
     }
@@ -35,29 +40,21 @@ public class AccountServiceTest {
     @Test
     public void testGetRealUser() {
         accountService.addUser(testUser);
-        final UserProfile trueUser = accountService.getUser(testUser.getID());
+        final UsersDataSet trueUser = accountService.getUser(testUser.getID());
         assertNotNull(trueUser);
     }
 
     @Test
     public void testGetUnrealUser() {
         accountService.addUser(testUser);
-        final UserProfile falseUser = accountService.getUser(testUser.getID()+1);
-        assertNull(falseUser);
-    }
-
-    @Test
-    public void testGetDeletedUser() {
-        accountService.addUser(testUser);
-        accountService.deleteUser(testUser.getID());
-        final UserProfile falseUser = accountService.getUser(testUser.getID());
+        final UsersDataSet falseUser = accountService.getUser(testUser.getID()+1);
         assertNull(falseUser);
     }
 
     @Test
     public void testGetUserByRealSession() {
         accountService.logIn("0", testUser);
-        UserProfile user = accountService.getUserBySession("0");
+        UsersDataSet user = accountService.getUserBySession("0");
         assertNotNull(user);
         assertEquals(user, testUser);
     }
@@ -66,45 +63,28 @@ public class AccountServiceTest {
     public void testGetUserByUnrealSession() {
         accountService.addUser(testUser);
         accountService.logIn("0", testUser);
-        UserProfile user = accountService.getUserBySession("1");
+        UsersDataSet user = accountService.getUserBySession("1");
         if (user != null && user.equals(testUser))
             assertFalse(true);
         else
             assertFalse(false);
     }
 
-    @Test
-    public void testGetUserByRealLogin() {
-        accountService.addUser(testUser);
-        UserProfile user = accountService.getUserByLogin("test");
-        assertNotNull(user);
-        assertEquals(user, testUser);
-    }
-
-    @Test
-    public void testGetUserByUnrealLogin() {
-        accountService.addUser(testUser);
-        UserProfile user = accountService.getUserByLogin("1");
-        if (user != null && user.equals(testUser))
-            assertFalse(true);
-        else
-            assertFalse(false);
-    }
 
     @SuppressWarnings("all")
     @Test
     public void testDeleteRealUser() {
         accountService.addUser(testUser);
-        Long id = accountService.getUserByLogin("test").getID();
+        Long id = accountService.getUserByEmail("testemail").getID();
         accountService.deleteUser(id);
-        UserProfile user = accountService.getUser(id);
+        UsersDataSet user = accountService.getUser(id);
         assertNull(user);
     }
 
     @Test
     public void testUpdateUser() {
         accountService.addUser(testUser);
-        UserProfile changeduser = new UserProfile("test1", "testpass1", "testemail1");
+        UsersDataSet changeduser = new UsersDataSet("test1", "testpass1", "testemail1");
         accountService.updateUser(testUser,changeduser);
         assertEquals(testUser.getLogin() + testUser.getEmail() + testUser.getPassword(),changeduser.getLogin() + changeduser.getEmail() + changeduser.getPassword());
     }
@@ -124,4 +104,3 @@ public class AccountServiceTest {
         assertFalse(accountService.isAuthorized("0"));
     }
 }
-*/

@@ -80,6 +80,7 @@ public class UsersDAO {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     @Nullable
     public Collection<UsersDataSet> getAllUsers() {
         final Criteria criteria = session.createCriteria(UsersDataSet.class);
