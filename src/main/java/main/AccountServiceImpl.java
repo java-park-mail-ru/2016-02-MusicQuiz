@@ -17,13 +17,12 @@ import java.util.Map;
  * Created by seven-teen on 30.03.16.
  */
 public class AccountServiceImpl implements AccountService {
-    private Map<String, UsersDataSet> sessions;
+    private final Map<String, UsersDataSet> sessions = new HashMap<>();
 
     private final SessionFactory factory;
 
     public AccountServiceImpl(String dbName) {
         final Configuration configuration = Config.getConfiguration(dbName);
-        sessions = new HashMap<>();
         factory = createSessionFactory(configuration);
     }
 
@@ -69,12 +68,12 @@ public class AccountServiceImpl implements AccountService {
         return null;
     }
 
-    @Override
+    /*@Override
     public void printSessions() {
         for (String s : sessions.keySet()) {
             System.out.println(s);
         }
-    }
+    }*/
 
     @Override
     public void deleteUser(Long id) {

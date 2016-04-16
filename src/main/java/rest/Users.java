@@ -58,6 +58,9 @@ public class Users {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createUser(UsersDataSet user){
+        if(user.getEmail().isEmpty() || user.getLogin().isEmpty() || user.getPassword().isEmpty()){
+            return Response.status(Response.Status.FORBIDDEN).entity("{}\n").build();
+        }
         final AccountService accountService = context.get(AccountService.class);
         UsersDataSet currentUser = new UsersDataSet(user);
         if(accountService.addUser(currentUser)){

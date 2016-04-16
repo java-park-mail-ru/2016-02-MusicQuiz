@@ -71,14 +71,17 @@ public class AccountServiceTest {
     }
 
 
-    @SuppressWarnings("all")
+
     @Test
     public void testDeleteRealUser() {
         accountService.addUser(testUser);
-        Long id = accountService.getUserByEmail("testemail").getID();
+        UsersDataSet user = accountService.getUserByEmail("testemail");
+        if(user == null)
+            fail();
+        Long id = user.getID();
         accountService.deleteUser(id);
-        UsersDataSet user = accountService.getUser(id);
-        assertNull(user);
+        UsersDataSet deletedUser = accountService.getUser(id);
+        assertNull(deletedUser);
     }
 
     @Test

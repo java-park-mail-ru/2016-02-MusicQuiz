@@ -13,7 +13,7 @@ public class UsersDataSet {
     @Id
     @Column(name="Id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long userID;
+    private final long userID;
 
     @Column(name="Login")
     @NotNull
@@ -44,29 +44,6 @@ public class UsersDataSet {
         this.login = login;
         this.password = password;
         this.email = email;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj == this)
-            return true;
-
-        if(obj == null)
-            return false;
-
-        if(!(getClass() == obj.getClass()))
-            return false;
-
-        else{
-            UsersDataSet tmp = (UsersDataSet) obj;
-            return tmp.userID==this.userID;
-        }
-    }
-
-    @Override
-    public int hashCode(){
-        Long identificator = this.userID;
-        return identificator.hashCode();
     }
 
     public long getID() {

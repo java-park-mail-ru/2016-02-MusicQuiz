@@ -22,8 +22,10 @@ public interface AccountService {
 
     void deleteUser(Long id);
 
+    /* for debug
     @SuppressWarnings("unused")
     void printSessions();
+    */
 
     void updateUser(UsersDataSet user, UsersDataSet changedUser);
 
