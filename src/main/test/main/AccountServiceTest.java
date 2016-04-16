@@ -16,7 +16,7 @@ public class AccountServiceTest {
 
     @Before
     public void setupAccountService(){
-        accountService = new AccountServiceImpl("Music_Quiz");
+        accountService = new AccountServiceImpl();
     }
 
     @Test

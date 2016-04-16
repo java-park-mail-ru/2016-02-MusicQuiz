@@ -21,8 +21,8 @@ public class AccountServiceImpl implements AccountService {
 
     private final SessionFactory factory;
 
-    public AccountServiceImpl(String dbName) {
-        final Configuration configuration = Config.getConfiguration(dbName);
+    public AccountServiceImpl() {
+        final Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
         factory = createSessionFactory(configuration);
     }
 

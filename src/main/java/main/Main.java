@@ -32,7 +32,7 @@ public class Main {
         final ServletContextHandler contextHandler = new ServletContextHandler(server, "/api/", ServletContextHandler.SESSIONS);
 
         final Context context = new Context();
-        context.put(AccountService.class, new AccountServiceImpl("Music_Quiz"));
+        context.put(AccountService.class, new AccountServiceImpl());
 
         final ResourceConfig config = new ResourceConfig(Users.class, Sessions.class);
         config.register(new AbstractBinder() {
@@ -59,7 +59,7 @@ public class Main {
     }
 
     private static void loadProperties() throws  IOException {
-        try (final FileInputStream fis = new FileInputStream("cfg/server.properties")) {
+        try (final FileInputStream fis = new FileInputStream("src/main/resources/server.properties")) {
             final Properties properties = new Properties();
             properties.load(fis);
             port = Integer.parseInt(properties.getProperty("port"));
