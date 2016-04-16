@@ -12,21 +12,21 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import rest.Sessions;
 import rest.Users;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+
 /**
  * Created by IlyaRogov on 29.02.16.
  */
 public class Main {
 
-    public static final int DEFAULT_PORT = 8080;
+    private static int port = 0;
 
     @SuppressWarnings("OverlyBroadThrowsClause")
     public static void main(String[] args) throws Exception {
-        int port = DEFAULT_PORT;
-        if (args.length == 1) {
-            port = Integer.valueOf(args[0]);
-        }
-
-        System.out.append("Starting at port: ").append(String.valueOf(port)).append('\n');
+        loadProperties();
 
         final Server server = new Server(port);
         final ServletContextHandler contextHandler = new ServletContextHandler(server, "/api/", ServletContextHandler.SESSIONS);
@@ -44,7 +44,6 @@ public class Main {
 
         final ServletHolder servletHolder = new ServletHolder(new ServletContainer(config));
 
-
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setDirectoriesListed(true);
         resourceHandler.setWelcomeFiles(new String[]{ "index.html" });
@@ -54,11 +53,21 @@ public class Main {
         handlers.setHandlers(new Handler[] { resourceHandler, contextHandler });
         server.setHandler(handlers);
 
-
-
-
         contextHandler.addServlet(servletHolder, "/*");
         server.start();
         server.join();
+    }
+
+    private static void loadProperties() throws  IOException {
+        try (final FileInputStream fis = new FileInputStream("cfg/server.properties")) {
+            final Properties properties = new Properties();
+            properties.load(fis);
+            port = Integer.parseInt(properties.getProperty("port"));
+            System.out.println("host: " + properties.getProperty("host"));
+            System.out.println("port: " + properties.getProperty("port"));
+        }
+        catch (FileNotFoundException e){
+            e.printStackTrace();
+        }
     }
 }
