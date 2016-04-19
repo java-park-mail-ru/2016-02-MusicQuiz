@@ -1,6 +1,7 @@
 package main;
 
 import database.*;
+import org.eclipse.jetty.server.session.JDBCSessionManager;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -23,6 +24,7 @@ public class AccountServiceImpl implements AccountService {
 
     public AccountServiceImpl() {
         final Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
+        configuration.addAnnotatedClass(MusicDataSet.class);
         configuration.addAnnotatedClass(UsersDataSet.class);
         factory = createSessionFactory(configuration);
     }
@@ -113,6 +115,14 @@ public class AccountServiceImpl implements AccountService {
         Session session = factory.openSession();
         UsersDAO dao = new UsersDAO(session);
         return dao.getUserByEmail(email);
+    }
+
+    @Nullable
+    @Override
+    public MusicDataSet getTrack(Long id){
+        Session session = factory.openSession();
+        MusicDAO dao = new MusicDAO(session);
+        return dao.getTrack(id);
     }
 }
 

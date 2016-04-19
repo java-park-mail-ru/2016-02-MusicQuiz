@@ -9,6 +9,7 @@ import org.eclipse.jetty.server.Handler;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
+import rest.MusicStream;
 import rest.Sessions;
 import rest.Users;
 
@@ -34,7 +35,7 @@ public class Main {
         final Context context = new Context();
         context.put(AccountService.class, new AccountServiceImpl());
 
-        final ResourceConfig config = new ResourceConfig(Users.class, Sessions.class);
+        final ResourceConfig config = new ResourceConfig(MusicStream.class, Users.class, Sessions.class);
         config.register(new AbstractBinder() {
             @Override
             protected void configure() {

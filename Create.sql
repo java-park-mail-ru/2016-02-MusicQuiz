@@ -9,3 +9,10 @@ CREATE TABLE IF NOT EXISTS `Music_Quiz`.`User` (
   `Points` INT NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `Music_Quiz`.`Music` (
+  `Id` INT NOT NULL AUTO_INCREMENT,
+  `Path` VARCHAR(30) NOT NULL,
+  `Author` VARCHAR(20) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;

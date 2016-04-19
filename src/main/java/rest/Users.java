@@ -8,12 +8,9 @@ import org.jetbrains.annotations.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import javax.servlet.http.Cookie;
-import java.io.FileInputStream;
-import java.io.OutputStream;
 
 
 /**
@@ -39,18 +36,6 @@ public class Users {
             }
         }
         return sessionID;
-    }
-
-    @GET
-    @Produces("audio/mpeg")
-    @Path("/stream")
-    public Response getStream() {
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream("/home/user/1.mp3");
-        }
-        catch(Exception e) {e.printStackTrace();};
-        return Response.status(Response.Status.OK).entity(fis).build();
     }
 
     @GET

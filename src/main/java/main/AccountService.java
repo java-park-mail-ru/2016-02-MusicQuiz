@@ -1,5 +1,6 @@
 package main;
 
+import database.MusicDataSet;
 import database.UsersDataSet;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,4 +38,7 @@ public interface AccountService {
 
     @Nullable
     UsersDataSet getUserByEmail(String email);
+
+    @Nullable
+    MusicDataSet getTrack(Long id);
 }
