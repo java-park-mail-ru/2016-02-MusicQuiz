@@ -23,6 +23,7 @@ public class AccountServiceImpl implements AccountService {
 
     public AccountServiceImpl() {
         final Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
+        configuration.addAnnotatedClass(UsersDataSet.class);
         factory = createSessionFactory(configuration);
     }
 

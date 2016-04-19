@@ -6,5 +6,6 @@ CREATE TABLE IF NOT EXISTS `Music_Quiz`.`User` (
   `Login` VARCHAR(30) NOT NULL,
   `Password` VARCHAR(20) NOT NULL,
   `Email` VARCHAR(30) NOT NULL,
+  `Points` INT NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;

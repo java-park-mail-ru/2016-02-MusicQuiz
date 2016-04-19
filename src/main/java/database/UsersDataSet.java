@@ -27,12 +27,15 @@ public class UsersDataSet {
     @NotNull
     private String email;
 
+    @Column(name="Points")
+    private int points;
     @SuppressWarnings("unused")
     public UsersDataSet() {
         userID = -1;
         login = "";
         password = "";
         email = "";
+        points = 0;
     }
 
     public UsersDataSet(UsersDataSet user) {
@@ -44,6 +47,7 @@ public class UsersDataSet {
         this.login = login;
         this.password = password;
         this.email = email;
+        this.points = 0;
     }
 
     public long getID() {
@@ -72,4 +76,8 @@ public class UsersDataSet {
     public String getEmail() { return email; }
 
     public void setEmail(@NotNull String email) { this.email = email; }
+
+    public int getPoints() { return this.points; }
+
+    public void setPoints(int points) { this.points = points; }
 }

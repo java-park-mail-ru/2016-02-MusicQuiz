@@ -65,7 +65,8 @@ public class Users {
 
             String jsonStr =  "{ \n\t\"id\": " + user.getID() +", " +
                     "\n\t\"login\": \"" + user.getLogin() + "\", " +
-                    "\n\t\"email\": \"" + user.getEmail() + "\"\n}\n";
+                    "\n\t\"email\": \"" + user.getEmail() + "\", " +
+                    "\n\t\"points\": \"" + user.getPoints() + "\"\n}\n";
             return Response.status(Response.Status.OK).entity(jsonStr).build();
         }
     }
