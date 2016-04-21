@@ -9,9 +9,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -124,5 +122,14 @@ public class AccountServiceImpl implements AccountService {
         MusicDAO dao = new MusicDAO(session);
         return dao.getTrack(id);
     }
-}
 
+    @Override
+    public ArrayList<MusicDataSet> getTracks() {
+        ArrayList<MusicDataSet> tracks = new ArrayList<>(5);
+        for (MusicDataSet track : tracks) {
+            Random r = new Random();
+            track= getTrack((long)r.nextInt(2));
+        }
+        return tracks;
+    }
+}

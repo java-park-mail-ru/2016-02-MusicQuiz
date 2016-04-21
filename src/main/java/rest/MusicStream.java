@@ -45,8 +45,5 @@ public class MusicStream {
             e.printStackTrace();
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        finally {
-            fis.close();
-        }
     }
 }
