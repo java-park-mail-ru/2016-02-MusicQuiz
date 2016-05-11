@@ -4,6 +4,7 @@ import database.MusicDataSet;
 import database.UsersDataSet;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -42,4 +43,6 @@ public interface AccountService {
 
     @Nullable
     MusicDataSet getTrack(Long id);
+
+    ArrayList<MusicDataSet> getTracks();
 }
