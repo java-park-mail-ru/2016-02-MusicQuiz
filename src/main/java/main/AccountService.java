@@ -12,6 +12,7 @@ import java.util.Collection;
 
 public interface AccountService {
 
+    @SuppressWarnings("unused")
     Collection<UsersDataSet> getAllUsers();
 
     boolean addUser(UsersDataSet userProfile);

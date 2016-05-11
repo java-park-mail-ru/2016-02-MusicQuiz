@@ -16,7 +16,7 @@ public class AccountServiceTest {
 
     @Before
     public void setupAccountService(){
-        accountService = new AccountServiceImpl();
+        accountService = new AccountServiceImpl("test_hibetnate.cfg.xml");
     }
 
     @Test

@@ -24,6 +24,7 @@ public class MusicDAO {
         return null;
     }
 
+    @SuppressWarnings("unused")
     public void addTrack(MusicDataSet track){
         final Transaction trx = session.beginTransaction();
         try {
@@ -36,6 +37,7 @@ public class MusicDAO {
         }
     }
 
+    @SuppressWarnings("unused")
     public void deleteTrack(MusicDataSet track){
         final Transaction trx = session.beginTransaction();
         try{

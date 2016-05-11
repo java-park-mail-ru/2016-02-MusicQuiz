@@ -2,6 +2,7 @@ package rest;
 
 import database.MusicDataSet;
 import main.AccountService;
+import main.Context;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -24,7 +25,7 @@ public class MusicStream {
 
     @SuppressWarnings("unused")
     @Inject
-    private main.Context context;
+    private Context context;
 
     @GET
     @Produces("audio/mpeg")
@@ -36,17 +37,14 @@ public class MusicStream {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         String path = track.getPath();
-        FileInputStream fis = null;
         try {
+            FileInputStream fis = null;
             fis = new FileInputStream(path);
             return Response.status(Response.Status.OK).entity(fis).build();
         }
         catch (FileNotFoundException e){
             e.printStackTrace();
             return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-        finally {
-            fis.close();
         }
     }
 }

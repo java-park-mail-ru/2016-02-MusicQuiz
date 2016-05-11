@@ -1,5 +1,6 @@
 package rest;
 
+import database.UsersDataSet;
 import main.AccountService;
 import main.AccountServiceImpl;
 import main.Context;
@@ -32,9 +33,9 @@ public class ServletTest extends JerseyTest {
     @Override
     protected Application configure() {
         final Context context = new Context();
-        context.put(AccountService.class, new AccountServiceImpl());
+        context.put(AccountService.class, new AccountServiceImpl("test_hibernate.cfg.xml"));
 
-        final ResourceConfig config = new ResourceConfig(Users.class);
+        final ResourceConfig config = new ResourceConfig(UsersDataSet.class);
         final HttpServletRequest request = mock(HttpServletRequest.class);
         //noinspection AnonymousInnerClassMayBeStatic
         config.register(new AbstractBinder() {
@@ -44,7 +45,6 @@ public class ServletTest extends JerseyTest {
                 bind(request).to(HttpServletRequest.class);
             }
         });
-
         return config;
     }
 

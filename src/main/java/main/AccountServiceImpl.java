@@ -1,11 +1,13 @@
 package main;
 
 import database.*;
-import org.eclipse.jetty.server.session.JDBCSessionManager;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.resource.transaction.spi.TransactionStatus;
 import org.hibernate.service.ServiceRegistry;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,8 +24,8 @@ public class AccountServiceImpl implements AccountService {
 
     private final SessionFactory factory;
 
-    public AccountServiceImpl() {
-        final Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
+    public AccountServiceImpl(String file) {
+        final Configuration configuration = new Configuration().configure(file);
         configuration.addAnnotatedClass(MusicDataSet.class);
         configuration.addAnnotatedClass(UsersDataSet.class);
         factory = createSessionFactory(configuration);
@@ -39,18 +41,41 @@ public class AccountServiceImpl implements AccountService {
     @Nullable
     @Override
     public Collection<UsersDataSet> getAllUsers() {
-        Session session = factory.openSession();
-        UsersDAO dao = new UsersDAO(session);
-        return dao.getAllUsers();
+        Transaction tx = null;
+        try(Session session = factory.openSession()) {
+            tx = session.beginTransaction();
+            final UsersDAO dao = new UsersDAO(session);
+            return dao.getAllUsers();
+        } catch (HibernateException ex) {
+            if(tx != null && (tx.getStatus() == TransactionStatus.ACTIVE
+                            || tx.getStatus() == TransactionStatus.MARKED_ROLLBACK)) {
+                tx.rollback();
+            }
+            ex.printStackTrace();
+            throw new HibernateException("Unable to get all users", ex);
+        }
     }
+
 
     @Override
     public boolean addUser(UsersDataSet user) {
-        Session session = factory.openSession();
-        UsersDAO dao = new UsersDAO(session);
-        if (dao.getUserByEmail(user.getEmail()) == null) {
-            dao.addUser(user);
-            return true;
+        Transaction tx = null;
+        try(Session session = factory.openSession()) {
+            tx = session.beginTransaction();
+            final UsersDAO dao = new UsersDAO(session);
+            if (dao.getUserByEmail(user.getEmail()) == null) {
+                dao.addUser(user);
+                return true;
+            }
+            tx.commit();
+        }
+        catch (HibernateException ex){
+            if(tx != null && (tx.getStatus() == TransactionStatus.ACTIVE
+                            || tx.getStatus() == TransactionStatus.MARKED_ROLLBACK)) {
+                tx.rollback();
+            }
+            ex.printStackTrace();
+            throw new HibernateException("Unable to add user", ex);
         }
         return false;
     }
@@ -58,9 +83,20 @@ public class AccountServiceImpl implements AccountService {
     @Nullable
     @Override
     public UsersDataSet getUser(Long id) {
-        Session session = factory.openSession();
-        UsersDAO dao = new UsersDAO(session);
-        return dao.getUser(id);
+        Transaction tx = null;
+        try(Session session = factory.openSession()) {
+            tx = session.beginTransaction();
+            UsersDAO dao = new UsersDAO(session);
+            return dao.getUser(id);
+        }
+        catch (HibernateException ex) {
+            if(tx != null && (tx.getStatus() == TransactionStatus.ACTIVE
+                    || tx.getStatus() == TransactionStatus.MARKED_ROLLBACK)) {
+                tx.rollback();
+            }
+        ex.printStackTrace();
+        throw new HibernateException("Unable to get user by id", ex);
+        }
     }
 
     @Override
@@ -80,18 +116,41 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void deleteUser(Long id) {
-        Session session = factory.openSession();
-        UsersDAO dao = new UsersDAO(session);
-        UsersDataSet user = (dao.getUser(id));
-        if(user != null)
-            dao.deleteUser(user);
+        Transaction tx = null;
+        try (Session session = factory.openSession()) {
+            tx = session.beginTransaction();
+            UsersDAO dao = new UsersDAO(session);
+            UsersDataSet user = (dao.getUser(id));
+            if (user != null)
+                dao.deleteUser(user);
+            tx.commit();
+        } catch (HibernateException ex) {
+            if (tx != null && (tx.getStatus() == TransactionStatus.ACTIVE
+                       || tx.getStatus() == TransactionStatus.MARKED_ROLLBACK)) {
+                tx.rollback();
+            }
+            ex.printStackTrace();
+            throw new HibernateException("Unable to delete user", ex);
+        }
     }
 
     @Override
     public void updateUser(UsersDataSet user, UsersDataSet changedUser) {
-        Session session = factory.openSession();
-        UsersDAO dao = new UsersDAO(session);
-        dao.updateUser(user, changedUser);
+        Transaction tx = null;
+        try (Session session = factory.openSession()) {
+            tx = session.beginTransaction();
+            UsersDAO dao = new UsersDAO(session);
+            dao.updateUser(user, changedUser);
+            tx.commit();
+        }
+        catch (HibernateException ex) {
+            if (tx != null && (tx.getStatus() == TransactionStatus.ACTIVE
+                    || tx.getStatus() == TransactionStatus.MARKED_ROLLBACK)) {
+                tx.rollback();
+            }
+            ex.printStackTrace();
+            throw new HibernateException("Unable to update user", ex);
+        }
     }
 
     @Override
@@ -112,17 +171,39 @@ public class AccountServiceImpl implements AccountService {
     @Nullable
     @Override
     public UsersDataSet getUserByEmail(String email){
-        Session session = factory.openSession();
-        UsersDAO dao = new UsersDAO(session);
-        return dao.getUserByEmail(email);
+        Transaction tx = null;
+        try (Session session = factory.openSession()) {
+            tx = session.beginTransaction();
+            UsersDAO dao = new UsersDAO(session);
+            return dao.getUserByEmail(email);
+        }
+        catch (HibernateException ex) {
+            if (tx != null && (tx.getStatus() == TransactionStatus.ACTIVE
+                    || tx.getStatus() == TransactionStatus.MARKED_ROLLBACK)) {
+                tx.rollback();
+            }
+            ex.printStackTrace();
+            throw new HibernateException("Unable to get user by email", ex);
+        }
     }
 
     @Nullable
     @Override
-    public MusicDataSet getTrack(Long id){
-        Session session = factory.openSession();
-        MusicDAO dao = new MusicDAO(session);
-        return dao.getTrack(id);
+    public MusicDataSet getTrack(Long id) {
+        Transaction tx = null;
+        try (Session session = factory.openSession()) {
+            tx = session.beginTransaction();
+            MusicDAO dao = new MusicDAO(session);
+            return dao.getTrack(id);
+        }
+        catch (HibernateException ex) {
+            if (tx != null && (tx.getStatus() == TransactionStatus.ACTIVE
+                    || tx.getStatus() == TransactionStatus.MARKED_ROLLBACK)) {
+                tx.rollback();
+            }
+            ex.printStackTrace();
+            throw new HibernateException("Unable to get track", ex);
+        }
     }
 }
 

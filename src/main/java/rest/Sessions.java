@@ -2,7 +2,7 @@ package rest;
 
 import database.UsersDataSet;
 import main.AccountService;
-import org.jetbrains.annotations.Nullable;
+import rest.Helper;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -25,27 +25,12 @@ public class Sessions {
     @Inject
     private main.Context context;
 
-    @Nullable
-    private static String getCookie(HttpServletRequest request){
-        String sessionID = null;
-        Cookie[] cookies = request.getCookies();
-        if(cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("MusicQuiz")) {
-                    sessionID = cookie.getValue();
-                    break;
-                }
-            }
-        }
-        return sessionID;
-    }
-
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response isAuthenticated(@Context HttpServletRequest request) {
         final AccountService accountService = context.get(AccountService.class);
-        final String sessionID = getCookie(request);
+        final String sessionID = Helper.getCookie(request);
         if(sessionID != null && accountService.isAuthorized(sessionID)) {
             UsersDataSet user = accountService.getUserBySession(sessionID);
             if(user != null) {
@@ -78,7 +63,7 @@ public class Sessions {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteSession(@Context HttpServletRequest request) {
-        final String sessionID = getCookie(request);
+        final String sessionID = Helper.getCookie(request);
         final AccountService accountService = context.get(AccountService.class);
         if(sessionID != null && accountService.isAuthorized(sessionID)) {
             accountService.logOut(sessionID);
