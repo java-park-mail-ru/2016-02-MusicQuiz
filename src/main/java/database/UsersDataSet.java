@@ -8,14 +8,14 @@ import javax.persistence.*;
  * Created by seven-teen on 03.04.16.
  */
 @Entity
-@Table(name="User")
+@Table(name="User") //индексов пока нет
 public class UsersDataSet {
     @Id
     @Column(name="Id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private final long userID;
 
-    @Column(name="Login")
+    @Column(name="Login", unique = true)
     @NotNull
     private String login;
 
@@ -23,7 +23,7 @@ public class UsersDataSet {
     @NotNull
     private String password;
 
-    @Column(name="Email")
+    @Column(name="Email", unique = true)
     @NotNull
     private String email;
 
