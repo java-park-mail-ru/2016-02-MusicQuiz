@@ -23,21 +23,6 @@ public class Users {
     @Inject
     private main.Context context;
 
-    @Nullable
-    private static String getCookie(HttpServletRequest request){
-        String sessionID = null;
-        Cookie[] cookies = request.getCookies();
-        if(cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("MusicQuiz")) {
-                    sessionID = cookie.getValue();
-                    break;
-                }
-            }
-        }
-        return sessionID;
-    }
-
     @GET
     @Path("{id}")
     public Response getUserByID(@PathParam("id") Long id) {
@@ -79,7 +64,7 @@ public class Users {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateUser(@PathParam("id") Long id, UsersDataSet user, @Context HttpServletRequest request) {
         final AccountService accountService = context.get(AccountService.class);
-        final String sessionID = getCookie(request);
+        final String sessionID = Helper.getCookie(request);
         if(sessionID == null || !accountService.isAuthorized(sessionID)) {
             String jsonStr403 = "{ " +
                     "\n\t\"status\": 403, " +
@@ -102,7 +87,7 @@ public class Users {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteUserByID(@PathParam("id") Long id, @Context HttpServletRequest request) {
         final AccountService accountService = context.get(AccountService.class);
-        final String sessionID = getCookie(request);
+        final String sessionID = Helper.getCookie(request);
         if(sessionID != null && accountService.isAuthorized(sessionID)) {
             accountService.deleteUser(id);
             return Response.status(Response.Status.OK).entity("{}\n").build();
