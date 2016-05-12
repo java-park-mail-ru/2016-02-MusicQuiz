@@ -32,7 +32,7 @@ public class ServletTest extends JerseyTest {
     @Override
     protected Application configure() {
         final Context context = new Context();
-        context.put(AccountService.class, new AccountServiceImpl());
+        context.put(AccountService.class, new AccountServiceImpl("test_hibernate.cfg.xml"));
 
         final ResourceConfig config = new ResourceConfig(Users.class);
         final HttpServletRequest request = mock(HttpServletRequest.class);

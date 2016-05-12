@@ -23,8 +23,8 @@ public class AccountServiceImpl implements AccountService {
 
     private final SessionFactory factory;
 
-    public AccountServiceImpl() {
-        final Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
+    public AccountServiceImpl(String fileName) {
+        final Configuration configuration = new Configuration().configure(fileName);
         configuration.addAnnotatedClass(MusicDataSet.class);
         configuration.addAnnotatedClass(UsersDataSet.class);
         factory = createSessionFactory(configuration);
