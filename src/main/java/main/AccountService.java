@@ -1,83 +1,48 @@
 package main;
 
+import database.MusicDataSet;
+import database.UsersDataSet;
 import org.jetbrains.annotations.Nullable;
-import rest.UserProfile;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by IlyaRogov on 29.02.16.
  */
 
-public class AccountService {
-    private Map<Long, UserProfile> users = new HashMap<>();
-    private Map<String, UserProfile> sessions = new HashMap<>();
+public interface AccountService {
 
-    public AccountService() {
-        users.put(0L, new UserProfile("admin", "admin", "admin@addm.in"));
-        users.put(1L, new UserProfile("guest", "12345", "guest@gue.st"));
-    }
+    @SuppressWarnings("unused")
+    Collection<UsersDataSet> getAllUsers();
 
-    public Collection<UserProfile> getAllUsers() {
-        return users.values();
-    }
+    boolean addUser(UsersDataSet userProfile);
 
-    public boolean addUser(UserProfile userProfile) {
-        if(users.containsKey(userProfile.getID()))
-            return false;
-        users.put(userProfile.getID(), userProfile);
-        return true;
-    }
-
-    public UserProfile getUser(Long id) {
-        return users.get(id);
-    }
+    UsersDataSet getUser(Long id);
 
     @Nullable
-    public UserProfile getUserBySession(String SessionID) {
-        if(sessions.containsKey(SessionID)) {
-            return sessions.get(SessionID);
-        }
-        else return null;
-    }
+    UsersDataSet getUserBySession(String sessionID);
 
-    public Boolean deleteUser(Long id) {
-        if(users.containsKey(id)) {
-            users.remove(id);
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
+    void deleteUser(Long id);
 
-    public void updateUser(UserProfile user, UserProfile changedUser) {
-        if(!user.getLogin().equals(changedUser.getLogin()) && changedUser.getLogin() != null) {
-                user.setLogin(changedUser.getLogin());
-        }
+    /* for debug
+    @SuppressWarnings("unused")
+    void printSessions();
+    */
 
-        if(!user.getPassword().equals(changedUser.getPassword()) && changedUser.getPassword() != null) {
-            user.setPassword(changedUser.getPassword());
-        }
+    void updateUser(UsersDataSet user, UsersDataSet changedUser);
 
-        if(!user.getEmail().equals(changedUser.getEmail()) && changedUser.getEmail() != null) {
-            user.setEmail(changedUser.getEmail());
-        }
+    void logIn(String sessionID, UsersDataSet user);
 
-    }
+    void logOut(String sessionID);
 
-    public void logIn(String SessionID, UserProfile user) {
-        sessions.put(SessionID, user);
-    }
+    boolean isAuthorized(String sessionID);
 
-    public Boolean isAuthenticated(String SessionID, UserProfile user) {
+    @Nullable
+    UsersDataSet getUserByEmail(String email);
 
-        return sessions.get(SessionID).getID().equals(user.getID());
-    }
+    @Nullable
+    MusicDataSet getTrack(Long id);
 
-    public void logOut(String SessionID) {
-        sessions.remove(SessionID);
-    }
+    ArrayList<MusicDataSet> getTracks();
 }

@@ -1,16 +1,16 @@
 package rest;
 
+import database.UsersDataSet;
 import main.AccountService;
+import rest.Helper;
 
+
+import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.util.Collection;
+import javax.ws.rs.core.*;
+
 
 /**
  * Created by IlyaRogov on 29.02.16.
@@ -18,81 +18,84 @@ import java.util.Collection;
 @Singleton
 @Path("/user")
 public class Users {
-    private AccountService accountService;
-
-    public Users(AccountService accountService) {
-        this.accountService = accountService;
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllUsers() {
-        final Collection<UserProfile> allUsers = accountService.getAllUsers();
-        System.out.append(String.valueOf(allUsers.size()));
-        return Response.status(Response.Status.OK).entity("").build();
-    }
+    @SuppressWarnings("unused")
+    @Inject
+    private main.Context context;
 
     @GET
     @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response getUserByID(@PathParam("id") Long id) {
-        final UserProfile user = accountService.getUser(id);
-        String jsonStr =  "{ \"id\": " + user.getID() +", " +
-                            "\"login\": \"" + user.getLogin() + "\", " +
-                            "\"email\": \"" + user.getEmail() + "\" }";
-        if(user.getID() == null) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+        final AccountService accountService = context.get(AccountService.class);
+        final UsersDataSet user = accountService.getUser(id);
+        if(user == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("{}\n").build();
         }
         else {
+            String jsonStr =  "{ \n\t\"id\": " + user.getID() +", " +
+                    "\n\t\"login\": \"" + user.getLogin() + "\", " +
+                    "\n\t\"email\": \"" + user.getEmail() + "\", " +
+                    "\n\t\"points\": \"" + user.getPoints() + "\"\n}\n";
             return Response.status(Response.Status.OK).entity(jsonStr).build();
-        }
-    }
-
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response createUser(UserProfile user, @Context HttpHeaders headers){
-        String jsonStr = "{ \"id\": " + user.getID() +" }";
-        if(accountService.addUser(user)){
-            return Response.status(Response.Status.OK).entity(jsonStr).build();
-        } else {
-            return Response.status(Response.Status.FORBIDDEN).build();
         }
     }
 
     @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createUser(UsersDataSet user){
+        if(user.getEmail().isEmpty() || user.getLogin().isEmpty() || user.getPassword().isEmpty()){
+            return Response.status(Response.Status.FORBIDDEN).entity("{}\n").build();
+        }
+        final AccountService accountService = context.get(AccountService.class);
+        UsersDataSet currentUser = new UsersDataSet(user);
+        if(accountService.addUser(currentUser)){
+            String jsonStr = "{ \n\t\"id\": " + currentUser.getID() +"\n}\n";
+            return Response.status(Response.Status.OK).entity(jsonStr).build();
+        } else {
+            return Response.status(Response.Status.FORBIDDEN).entity("{}\n").build();
+        }
+    }
+
+    @POST
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateUser(@PathParam("id") Long id, UserProfile user,
-                               @Context HttpHeaders headers, @Context HttpServletRequest request) {
-        final String SessionID = request.getSession().getId();
-        UserProfile updatingUser = accountService.getUserBySession(SessionID);
-        String jsonStr200 = "{ \"id\": " + user.getID() +" }";
-        String jsonStr403 = "{ " +
-                            "\"status\": 403, " +
-                            "\"message\": \"Чужой юзер\" }";
-        if(updatingUser == null || !updatingUser.equals(user)) {
+    public Response updateUser(@PathParam("id") Long id, UsersDataSet user, @Context HttpServletRequest request) {
+        final AccountService accountService = context.get(AccountService.class);
+        final String sessionID = Helper.getCookie(request);
+        if(sessionID == null || !accountService.isAuthorized(sessionID)) {
+            String jsonStr403 = "{ " +
+                    "\n\t\"status\": 403, " +
+                    "\n\t\"message\": \"Чужой юзер\" \n}\n";
             return Response.status(Response.Status.FORBIDDEN).entity(jsonStr403).build();
         }
         else {
-            accountService.updateUser(user, updatingUser);
-            return Response.status(Response.Status.OK).entity(jsonStr200).build();
+            UsersDataSet currentUser = accountService.getUserBySession(sessionID);
+            if(currentUser != null){
+                accountService.updateUser(currentUser, user);
+                String jsonStr200 = "{\n\t\"id\": " + currentUser.getID() +"\n}\n";
+                return Response.status(Response.Status.OK).entity(jsonStr200).build();
+            }
+            return Response.status(Response.Status.OK).entity("").build();
         }
     }
 
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteUserByID(@PathParam("id") Long id, @Context HttpHeaders headers) {
-        String jsonStr = "{ " +
-                            "\"status\": 403, " +
-                            "\"message\": \"Чужой юзер\"" +
-                         " }";
-        if(!accountService.deleteUser(id)) {
-            return Response.status(Response.Status.OK).build();
+    public Response deleteUserByID(@PathParam("id") Long id, @Context HttpServletRequest request) {
+        final AccountService accountService = context.get(AccountService.class);
+        final String sessionID = Helper.getCookie(request);
+        if(sessionID != null && accountService.isAuthorized(sessionID)) {
+            accountService.deleteUser(id);
+            return Response.status(Response.Status.OK).entity("{}\n").build();
         }
-        else
+        else {
+            String jsonStr = "{ " +
+                    "\n\t\"status\": 403," +
+                    "\n\t\"message \": \"Чужой юзер\"" +
+                    "\n}\n";
             return Response.status(Response.Status.FORBIDDEN).entity(jsonStr).build();
+        }
     }
 }
