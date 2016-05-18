@@ -2,7 +2,6 @@ package rest;
 
 import database.UsersDataSet;
 import main.AccountService;
-import org.jetbrains.annotations.Nullable;
 
 
 import javax.inject.Inject;
@@ -10,7 +9,6 @@ import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import javax.servlet.http.Cookie;
 
 
 /**
