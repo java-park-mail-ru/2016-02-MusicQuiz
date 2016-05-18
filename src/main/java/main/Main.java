@@ -1,5 +1,10 @@
 package main;
 
+import frontend.GameWebSocket;
+import frontend.GameWebSocketImpl;
+import frontend.GameWebSocketServlet;
+import mechanics.GameMechanicsImpl;
+import mechanics.GameSession;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -35,6 +40,13 @@ public class Main {
 
         final Context context = new Context();
         context.put(AccountService.class, new AccountServiceImpl("hibernate.cfg.xml"));
+
+        final GameWebSocket webSocketService = new GameWebSocketImpl();
+        context.put(GameWebSocket.class, webSocketService);
+        final GameSession gameMechanics = new GameMechanicsImpl(webSocketService, context.get(AccountService.class));
+        context.put(GameSession.class, gameMechanics);
+
+        contextHandler.addServlet(new ServletHolder(new GameWebSocketServlet(context)), "/gameplay");
 
         final ResourceConfig config = new ResourceConfig(MusicStream.class, Users.class, Sessions.class, ScoreBoard.class);
         config.register(new AbstractBinder() {
