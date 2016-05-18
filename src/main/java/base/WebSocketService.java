@@ -7,7 +7,7 @@ import frontend.GameWebSocket;
  */
  public interface WebSocketService {
 
-        void addUser(GameWebSocket user);
+        void addUser(frontend.GameWebSocket user);
 
         void notifyMyNewScore(GameUser user);
 
