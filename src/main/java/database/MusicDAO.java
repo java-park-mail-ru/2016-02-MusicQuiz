@@ -7,9 +7,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
-/**
- * Created by seven-teen on 19.04.16.
- */
 public class MusicDAO {
     private final Session session;
 

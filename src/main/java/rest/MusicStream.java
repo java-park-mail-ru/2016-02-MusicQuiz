@@ -2,6 +2,7 @@ package rest;
 
 import database.MusicDataSet;
 import main.AccountService;
+import org.hibernate.HibernateException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -30,8 +31,13 @@ public class MusicStream {
     @Produces("audio/mpeg")
     @Path("{id}")
     public Response getStream(@PathParam("id") Long id) throws IOException {
-
-        MusicDataSet track = context.get(AccountService.class).getTrack(id);
+        MusicDataSet track = null;
+        try {
+            track = context.get(AccountService.class).getTrack(id);
+        }
+        catch(HibernateException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
         if(track == null) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }

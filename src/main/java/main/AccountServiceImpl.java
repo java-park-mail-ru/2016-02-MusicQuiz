@@ -186,24 +186,29 @@ public class AccountServiceImpl implements AccountService {
 
     @Nullable
     @Override
-    public MusicDataSet getTrack(Long id) throws HibernateException{
-        Session session = factory.openSession();
-        MusicDAO dao = new MusicDAO(session);
-        return dao.getTrack(id);
+    public MusicDataSet getTrack(Long id) throws HibernateException {
+        Transaction tx = null;
+        try(Session session = factory.openSession()) {
+            tx = session.beginTransaction();
+            final MusicDAO dao = new MusicDAO(session);
+            return dao.getTrack(id);
+        }
+        catch (HibernateException ex) {
+            if(tx != null && (tx.getStatus() == TransactionStatus.ACTIVE
+                    || tx.getStatus() == TransactionStatus.MARKED_ROLLBACK)) {
+                tx.rollback();
+            }
+            ex.printStackTrace();
+            throw new HibernateException("Unnable to get track", ex);
+        }
     }
 
     @Override
     public ArrayList<MusicDataSet> getTracks() {
-        ArrayList<MusicDataSet> tracks = new ArrayList<>(5);
-        for (MusicDataSet track : tracks) {
-            Random r = new Random();
-            try {
-                track = getTrack((long) r.nextInt(2));
-            }
-            catch (HibernateException ex){
-                ex.printStackTrace();
-                throw new HibernateException("Unable to get track", ex);
-            }
+        ArrayList<MusicDataSet> tracks = new ArrayList<>();
+        Random r = new Random();
+        for (int i=0; i<5; i++) {
+            tracks.add(getTrack((long) r.nextInt(2)));
         }
         return tracks;
     }
