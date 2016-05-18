@@ -12,7 +12,9 @@ import org.jetbrains.annotations.Nullable;
  * Created by seven-teen on 17.05.16.
  */
 public class GameWebSocket {
-
+<<<<<<< HEAD
+    private Session session;
+=======
     private final long myId;
     @Nullable
     private Session session;
@@ -30,4 +32,5 @@ public class GameWebSocket {
         this.webSocketService = webSocketService;
         this.accountService = accountService;
     }
+>>>>>>> 3270da0f9c42332ecd9e5fc9804862d7a96b1a60
 }
