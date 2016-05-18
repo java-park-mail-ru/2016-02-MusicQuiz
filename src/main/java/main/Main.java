@@ -10,6 +10,7 @@ import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 import rest.MusicStream;
+import rest.ScoreBoard;
 import rest.Sessions;
 import rest.Users;
 
@@ -35,7 +36,7 @@ public class Main {
         final Context context = new Context();
         context.put(AccountService.class, new AccountServiceImpl("hibernate.cfg.xml"));
 
-        final ResourceConfig config = new ResourceConfig(MusicStream.class, Users.class, Sessions.class);
+        final ResourceConfig config = new ResourceConfig(MusicStream.class, Users.class, Sessions.class, ScoreBoard.class);
         config.register(new AbstractBinder() {
             @Override
             protected void configure() {

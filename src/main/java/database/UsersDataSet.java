@@ -9,7 +9,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="User") //индексов пока нет
-public class UsersDataSet {
+public class UsersDataSet implements Comparable{
     @Id
     @Column(name="Id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -80,4 +80,14 @@ public class UsersDataSet {
     public int getPoints() { return this.points; }
 
     public void setPoints(int points) { this.points = points; }
+
+    @Override
+    public int compareTo(Object o) {
+        UsersDataSet tmp = (UsersDataSet)o;
+        if(this.points < tmp.points)
+            return -1;
+        else if(this.points > tmp.points)
+            return 1;
+        return 0;
+    }
 }
