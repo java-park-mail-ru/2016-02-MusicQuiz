@@ -3,6 +3,7 @@ package mechanics;
 import base.GameMechanics;
 import base.GameUser;
 import base.WebSocketService;
+import main.AccountService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import rest.Helper;
@@ -41,7 +42,7 @@ public class GameMechanicsImpl implements GameMechanics{
         @NotNull
         private final Queue<Runnable> tasks = new ConcurrentLinkedQueue<>();
 
-        public GameMechanicsImpl(@NotNull WebSocketService webSocketService) {
+        public GameMechanicsImpl(@NotNull WebSocketService webSocketService, AccountService accountService) {
             this.webSocketService = webSocketService;
         }
 
