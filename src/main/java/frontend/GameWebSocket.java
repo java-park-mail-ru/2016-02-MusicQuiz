@@ -8,5 +8,4 @@ import org.eclipse.jetty.websocket.api.Session;
  */
 public class GameWebSocket {
     private Session session;
-
 }
