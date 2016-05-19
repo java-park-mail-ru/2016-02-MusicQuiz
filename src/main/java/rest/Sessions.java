@@ -1,15 +1,17 @@
 package rest;
 
+import database.UsersDataSet;
 import main.AccountService;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Collection;
 
 /**
  * Created by IlyaRogov on 01.03.16.
@@ -18,58 +20,55 @@ import java.util.Collection;
 @Singleton
 @Path("/session")
 public class Sessions {
+    @SuppressWarnings("unused")
+    @Inject
+    private main.Context context;
 
-    private AccountService accountService;
 
-    public Sessions(AccountService accountService) {
-        this.accountService = accountService;
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllSessions() {
-        final Collection<UserProfile> allSessions = accountService.getAllUsers();
-        return Response.status(Response.Status.OK)./*entity(allSessions.toArray(new UserProfile[allSessions.size()])).*/build();
-    }
 
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response isAuthenticated(UserProfile user, @Context HttpServletRequest request, @Context HttpHeaders headers) {
-        final String SessionID = request.getSession().getId();
-        String jsonStr200 = "{ \"id\": " + user.getID() +" }";
-        if(accountService.isAuthenticated(SessionID, user)) {
-            return Response.status(Response.Status.OK).build();
+    public Response isAuthenticated(@Context HttpServletRequest request) {
+        final AccountService accountService = context.get(AccountService.class);
+        final String sessionID = Helper.getCookie(request);
+        if(sessionID != null && accountService.isAuthorized(sessionID)) {
+            UsersDataSet user = accountService.getUserBySession(sessionID);
+            if(user != null) {
+                String jsonStr200 = "{\n\t\"id\": " + user.getID() + "\n}\n";
+                return Response.status(Response.Status.OK).entity(jsonStr200).build();
+            }
         }
-        else {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
+        return Response.status(Response.Status.UNAUTHORIZED).entity("{}").build();
     }
 
-
-    @POST
+    @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addSession(UserProfile user, @Context HttpServletRequest request) {
-        final String SessionID = request.getSession().getId();
-        UserProfile currentUser = accountService.getUser(user.getID());
-        String jsonStr200 = "{ \"id\": " + user.getID() +" }";
+    public Response addSession(UsersDataSet user, @Context HttpServletRequest request, @Context HttpServletResponse response) {
+        final AccountService accountService = context.get(AccountService.class);
+        final String sessionID = request.getSession().getId();
+        UsersDataSet currentUser = accountService.getUserByEmail(user.getEmail());
         if(currentUser != null && currentUser.getPassword().equals(user.getPassword())) {
-            accountService.logIn(SessionID, user);
+            String jsonStr200 = "{\n\t\"id\": " + currentUser.getID() +"\n}\n";
+            accountService.logIn(sessionID, currentUser);
+            Cookie cookie = new Cookie("MusicQuiz", sessionID);
+            response.addCookie(cookie);
             return Response.status(Response.Status.OK).entity(jsonStr200).build();
         }
         else {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("{}\n").build();
         }
-
     }
-
 
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteSession(@Context HttpServletRequest request) {
-        final String SessionID = request.getSession().getId();
-        accountService.logOut(SessionID);
-        return Response.status(Response.Status.OK).build();
+        final String sessionID = Helper.getCookie(request);
+        final AccountService accountService = context.get(AccountService.class);
+        if(sessionID != null && accountService.isAuthorized(sessionID)) {
+            accountService.logOut(sessionID);
+        }
+        return Response.status(Response.Status.OK).entity("{}\n").build();
     }
 }
