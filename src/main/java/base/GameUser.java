@@ -8,23 +8,23 @@ import org.jetbrains.annotations.Nullable;
  */
 public class GameUser {
     @NotNull
-    private final String myName;
+    private final Long myId;
     @Nullable
-    private String opponentName;
+    private Long opponentId;
     private int myScore = 0;
     private int opponentScore = 0;
 
-    public GameUser(@NotNull String myName) {
-        this.myName = myName;
+    public GameUser(@NotNull Long myName) {
+        this.myId = myName;
     }
 
     @NotNull
-    public String getMyName() {
-        return myName;
+    public Long getMyId() {
+        return myId;
     }
     @Nullable
-    public String getOpponentName() {
-        return opponentName;
+    public Long getOpponentId() {
+        return opponentId;
     }
 
     public int getMyScore() {
@@ -43,8 +43,8 @@ public class GameUser {
         opponentScore++;
     }
 
-    public void setOpponentName(@NotNull String opponentName) {
-        this.opponentName = opponentName;
+    public void setOpponentId(@NotNull Long opponentId) {
+        this.opponentId = opponentId;
     }
 
 }

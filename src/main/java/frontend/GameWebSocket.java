@@ -45,4 +45,8 @@ public class GameWebSocket {
         webSocketService.removeUser(this);
         gameMechanics.removeUser(myId);
     }
+
+    public long getMyId() {
+        return myId;
+    }
 }
