@@ -46,4 +46,5 @@ public class MusicDataSet implements Serializable {
     public void setPath(@NotNull String path) {this.path = path; }
 
     public void setAuthor(@NotNull String author) {this.author = author;}
+
 }

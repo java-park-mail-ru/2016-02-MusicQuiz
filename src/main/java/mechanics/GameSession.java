@@ -8,6 +8,7 @@ import main.AccountService;
 import main.AccountServiceImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import rest.GameQuestions;
 
 import javax.inject.Inject;
 import java.time.Clock;
@@ -30,6 +31,8 @@ public class GameSession {
     @NotNull
     private Map<String, GameUser> users = new HashMap<>();
 
+    private GameQuestions songs;
+
     public GameSession(@NotNull String user1, @NotNull String user2) {
         startTime = Clock.systemDefaultZone().millis();
         GameUser gameUser1 = new GameUser(user1);
@@ -43,6 +46,8 @@ public class GameSession {
 
         this.first = gameUser1;
         this.second = gameUser2;
+
+        songs =  new GameQuestions();
     }
 
     @Nullable
@@ -72,6 +77,6 @@ public class GameSession {
     }
 
     public boolean isFirstWin() {
-        return true;
+        return first.getMyScore() > second.getMyScore();
     }
 }

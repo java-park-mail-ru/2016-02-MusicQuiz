@@ -113,7 +113,7 @@ public class GameMechanicsImpl implements GameMechanics{
         }
 
 
-        private void starGame(@NotNull Long first, @NotNull Long second) {
+        private void startGame(@NotNull Long first, @NotNull Long second) {
             GameSession gameSession = new GameSession(first, second);
             allSessions.add(gameSession);
             nameToGame.put(first, gameSession);
