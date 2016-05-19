@@ -26,11 +26,12 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     @Override
     public void notifyMyNewScore(GameUser user) {
-
+        userSockets.get(user.getMyId()).setMyScore(0);
     }
 
     @Override
     public void notifyEnemyNewScore(GameUser user) {
+        userSockets.get(user.getMyId()).setOpponentScore(0);
     }
 
     @Override
@@ -40,6 +41,6 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     @Override
     public void notifyGameOver(GameUser user, boolean win) {
-
+        //TODO
     }
 }

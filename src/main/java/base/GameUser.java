@@ -11,6 +11,7 @@ public class GameUser {
     private final Long myId;
     @Nullable
     private Long opponentId;
+
     private int myScore = 0;
     private int opponentScore = 0;
 
