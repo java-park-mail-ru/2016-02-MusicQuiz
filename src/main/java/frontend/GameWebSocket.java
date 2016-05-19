@@ -32,6 +32,10 @@ public class GameWebSocket {
     private final WebSocketService webSocketService;
     @NotNull
     private final AccountService accountService;
+    @NotNull
+    private int myScore;
+    @NotNull
+    private int opponentScore;
 
     public GameWebSocket(long myId, @NotNull GameMechanics gameMechanics,
                          @NotNull WebSocketService webSocketService, @NotNull AccountService accountService) {
@@ -62,5 +66,17 @@ public class GameWebSocket {
     public void onClose(int statusCode, String reason) {
         webSocketService.removeUser(this);
         gameMechanics.removeUser(myId);
+    }
+
+    public long getMyId() {
+        return myId;
+    }
+
+    public void setMyScore(int myScore) {
+        this.myScore = myScore;
+    }
+
+    public void setOpponentScore(int opponentScore) {
+        this.opponentScore = opponentScore;
     }
 }

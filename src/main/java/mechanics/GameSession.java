@@ -1,22 +1,13 @@
 package mechanics;
 
 import base.GameUser;
-import database.MusicDAO;
-import database.MusicDataSet;
-import database.UsersDataSet;
-import main.AccountService;
-import main.AccountServiceImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import rest.GameQuestions;
 
-import javax.inject.Inject;
 import java.time.Clock;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by user on 21.04.16.
@@ -28,18 +19,23 @@ public class GameSession {
     @NotNull
     private final GameUser second;
 
-    @NotNull
-    private Map<String, GameUser> users = new HashMap<>();
 
+    @NotNull
+    private Map<Long, GameUser> users = new HashMap<>();
+
+<<<<<<< HEAD
     private GameQuestions songs;
 
     public GameSession(@NotNull String user1, @NotNull String user2) {
+=======
+    public GameSession(@NotNull Long user1, @NotNull Long user2) {
+>>>>>>> dde4612bad1682e635cb22d65ed7fbacaf04a4b8
         startTime = Clock.systemDefaultZone().millis();
         GameUser gameUser1 = new GameUser(user1);
-        gameUser1.setOpponentName(user2);
+        gameUser1.setOpponentId(user2);
 
-        GameUser gameUser2 = new GameUser(user2);
-        gameUser2.setOpponentName(user1);
+        GameUser gameUser2 = new GameUser(user1);
+        gameUser2.setOpponentId(user2);
 
         users.put(user1, gameUser1);
         users.put(user2, gameUser2);
@@ -53,8 +49,8 @@ public class GameSession {
     @Nullable
     public GameUser getEnemy(@NotNull Long user) {
         @SuppressWarnings("ConstantConditions")
-        String enemyName = users.containsKey(user) ? users.get(user).getOpponentName() : null;
-        return enemyName == null ? null : users.get(enemyName);
+        final long enemyId = users.containsKey(user) ? users.get(user).getOpponentId() : -1;
+        return enemyId == -1 ? null : users.get(enemyId);
     }
 
     @Nullable
