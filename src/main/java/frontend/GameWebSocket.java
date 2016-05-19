@@ -5,6 +5,8 @@ import base.GameMechanics;
 import base.WebSocketService;
 import main.AccountService;
 import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,5 +31,18 @@ public class GameWebSocket {
         this.gameMechanics = gameMechanics;
         this.webSocketService = webSocketService;
         this.accountService = accountService;
+    }
+
+    @OnWebSocketConnect
+    public void onOpen(@NotNull Session session) {
+        this.session = session;
+        webSocketService.addUser(this);
+        gameMechanics.addUser(myId);
+    }
+
+    @OnWebSocketClose
+    public void onClose(int statusCode, String reason) {
+        webSocketService.removeUser(this);
+        gameMechanics.removeUser(myId);
     }
 }

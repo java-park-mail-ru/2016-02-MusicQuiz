@@ -47,11 +47,11 @@ public class GameMechanicsImpl implements GameMechanics{
         }
 
         @Override
-        public void addUser(@NotNull String user) {
+        public void addUser(@NotNull Long user) {
             tasks.add(()->addUserInternal(user));
         }
 
-        private void addUserInternal(@NotNull String user) {
+        private void addUserInternal(@NotNull Long user) {
             if (waiter != null) {
                 //noinspection ConstantConditions
                 starGame(user, waiter);
@@ -62,11 +62,11 @@ public class GameMechanicsImpl implements GameMechanics{
         }
 
         @Override
-        public void incrementScore(@NotNull String userName) {
+        public void incrementScore(@NotNull Long userName) {
             tasks.add(() -> incrementScoreInternal(userName));
         }
 
-        private void incrementScoreInternal(String userName) {
+        private void incrementScoreInternal(Long userName) {
             GameSession myGameSession = nameToGame.get(userName);
             GameUser myUser = myGameSession.getSelf(userName);
             myUser.incrementMyScore();
@@ -113,7 +113,7 @@ public class GameMechanicsImpl implements GameMechanics{
         }
 
 
-        private void starGame(@NotNull String first, @NotNull String second) {
+        private void starGame(@NotNull Long first, @NotNull Long second) {
             GameSession gameSession = new GameSession(first, second);
             allSessions.add(gameSession);
             nameToGame.put(first, gameSession);

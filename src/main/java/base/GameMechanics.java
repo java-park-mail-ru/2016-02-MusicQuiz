@@ -7,9 +7,11 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public interface GameMechanics {
-    public void addUser(@NotNull String user);
+    public void addUser(@NotNull Long user);
 
-    public void incrementScore(@NotNull String userName);
+    public void incrementScore(@NotNull Long user);
+
+    public void removeUser(long user);
 
     public void run();
 

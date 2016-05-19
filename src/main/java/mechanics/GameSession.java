@@ -46,14 +46,14 @@ public class GameSession {
     }
 
     @Nullable
-    public GameUser getEnemy(@NotNull String user) {
+    public GameUser getEnemy(@NotNull Long user) {
         @SuppressWarnings("ConstantConditions")
         String enemyName = users.containsKey(user) ? users.get(user).getOpponentName() : null;
         return enemyName == null ? null : users.get(enemyName);
     }
 
     @Nullable
-    public GameUser getSelf(String user) {
+    public GameUser getSelf(Long user) {
         return users.get(user);
     }
 
