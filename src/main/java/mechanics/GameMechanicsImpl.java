@@ -122,21 +122,11 @@ public class GameMechanicsImpl implements GameMechanics {
         }
     }
 
-
-<<<<<<< HEAD
-        private void startGame(@NotNull Long first, @NotNull Long second) {
-            GameSession gameSession = new GameSession(first, second);
-            allSessions.add(gameSession);
-            nameToGame.put(first, gameSession);
-            nameToGame.put(second, gameSession);
-=======
     private void startGame(@NotNull Long first, @NotNull Long second) {
         GameSession gameSession = new GameSession(first, second);
         allSessions.add(gameSession);
         nameToGame.put(first, gameSession);
         nameToGame.put(second, gameSession);
->>>>>>> dde4612bad1682e635cb22d65ed7fbacaf04a4b8
-
         webSocketService.notifyStartGame(gameSession.getSelf(first));
         webSocketService.notifyStartGame(gameSession.getSelf(second));
     }

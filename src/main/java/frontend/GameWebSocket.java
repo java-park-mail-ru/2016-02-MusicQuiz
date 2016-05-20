@@ -50,8 +50,9 @@ public class GameWebSocket {
         try {
             JsonReader jsonReader = Json.createReader(new StringReader(data));
             JsonArray array = jsonReader.readArray();
-            final UserAnswer userans = new UserAnswer();
-        } catch (IOException e) {
+            final UserAnswer userans = new UserAnswer(0, "answer");
+        } catch (Exception e) {
+
         }
     }
 

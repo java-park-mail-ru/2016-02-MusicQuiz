@@ -47,7 +47,7 @@ public class MusicDAO {
         }
     }
 
-    public long count() {
+    /*public long count() {
         final Transaction trx = session.beginTransaction();
         try{
             session.delete(track);
@@ -57,6 +57,6 @@ public class MusicDAO {
             e.printStackTrace();
             trx.rollback();
         }
-    }
+    }*/
 
 }

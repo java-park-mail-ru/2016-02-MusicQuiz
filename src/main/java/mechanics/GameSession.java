@@ -23,13 +23,9 @@ public class GameSession {
     @NotNull
     private Map<Long, GameUser> users = new HashMap<>();
 
-<<<<<<< HEAD
     private GameQuestions songs;
 
-    public GameSession(@NotNull String user1, @NotNull String user2) {
-=======
     public GameSession(@NotNull Long user1, @NotNull Long user2) {
->>>>>>> dde4612bad1682e635cb22d65ed7fbacaf04a4b8
         startTime = Clock.systemDefaultZone().millis();
         GameUser gameUser1 = new GameUser(user1);
         gameUser1.setOpponentId(user2);
