@@ -7,6 +7,7 @@ import main.AccountService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import rest.Helper;
+import rest.UserAnswer;
 
 import java.time.Clock;
 import java.util.*;
@@ -82,8 +83,11 @@ public class GameMechanicsImpl implements GameMechanics {
         myUser.incrementMyScore();
         GameUser enemyUser = myGameSession.getEnemy(userName);
         enemyUser.incrementEnemyScore();
-        webSocketService.notifyMyNewScore(myUser);
-        webSocketService.notifyEnemyNewScore(enemyUser);
+    }
+
+    @Override
+    public void choice(long user_id, UserAnswer ans) {
+
     }
 
     @Override
@@ -111,13 +115,14 @@ public class GameMechanicsImpl implements GameMechanics {
                     ex.printStackTrace();
                 }
             }
-
         }
         for (GameSession session : allSessions) {
             if (session.getSessionTime() > GAME_TIME) {
                 boolean firstWin = session.isFirstWin();
-                webSocketService.notifyGameOver(session.getFirst(), firstWin);
-                webSocketService.notifyGameOver(session.getSecond(), !firstWin);
+                webSocketService.notifyGameOver(session.getFirst(), session.isFirstWin(),
+                        session.getFirst().getMyScore(), session.getSecond().getMyScore());
+                webSocketService.notifyGameOver(session.getSecond(), !session.isFirstWin(),
+                        session.getSecond().getMyScore(), session.getFirst().getMyScore());
             }
         }
     }
@@ -127,8 +132,17 @@ public class GameMechanicsImpl implements GameMechanics {
         allSessions.add(gameSession);
         nameToGame.put(first, gameSession);
         nameToGame.put(second, gameSession);
-        webSocketService.notifyStartGame(gameSession.getSelf(first));
-        webSocketService.notifyStartGame(gameSession.getSelf(second));
+        webSocketService.notifyStartGame(gameSession.getSelf(first), 1/*gameSession.id*/,
+                gameSession.getTrackId(gameSession.getSelf(first)),gameSession.getAnswers(gameSession.getSelf(first)),
+                30/*time*/);
+        webSocketService.notifyStartGame(gameSession.getSelf(second), 1/*gameSession.id*/,
+                gameSession.getTrackId(gameSession.getSelf(second)),gameSession.getAnswers(gameSession.getSelf(second)),
+                30/*time*/);
     }
+
+    //здесь есть начало и завершение игры
+    //дописать еще действия на ответы игрока на вопросы
+    //также понять условия когда игра заканчивается
+    //действия при завершении игры описаны в gmStep
 }
 

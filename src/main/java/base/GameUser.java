@@ -14,6 +14,7 @@ public class GameUser {
 
     private int myScore = 0;
     private int opponentScore = 0;
+    private int num_question = 0;
 
     public GameUser(@NotNull Long myName) {
         this.myId = myName;
@@ -28,6 +29,8 @@ public class GameUser {
         return opponentId;
     }
 
+    public int getNum_question() {return num_question;}
+
     public int getMyScore() {
         return myScore;
     }
@@ -39,6 +42,8 @@ public class GameUser {
     public void incrementMyScore() {
         myScore++;
     }
+
+    public void incrementyQuestion() { num_question++; }
 
     public void incrementEnemyScore() {
         opponentScore++;

@@ -8,6 +8,7 @@ import rest.GameQuestions;
 import java.time.Clock;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by user on 21.04.16.
@@ -18,6 +19,7 @@ public class GameSession {
     private final GameUser first;
     @NotNull
     private final GameUser second;
+
 
 
     @NotNull
@@ -38,6 +40,7 @@ public class GameSession {
 
         this.first = gameUser1;
         this.second = gameUser2;
+
 
         songs =  new GameQuestions();
     }
@@ -61,6 +64,14 @@ public class GameSession {
     @NotNull
     public GameUser getFirst() {
         return first;
+    }
+
+    public long getTrackId(GameUser user) {
+        return songs.getIdQuestion(user.getNum_question());
+    }
+
+    public Set<String> getAnswers(GameUser user) {
+        return songs.getAnswers(user.getNum_question());
     }
 
     @NotNull
