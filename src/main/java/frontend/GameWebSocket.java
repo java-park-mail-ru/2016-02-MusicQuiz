@@ -128,7 +128,10 @@ public class GameWebSocket {
     public void onMessage(String data) {
         final JSONObject getJson = new JSONObject(data);
         UserAnswer ans = new UserAnswer(getJson.getLong("id_gamesession"), getJson.getString("user_answer"));
-        gameMechanics.choice(myId, ans);
+        if (getJson.getString("user_answer") != "-1")
+            gameMechanics.choice(myId, ans);
+        else
+            gameMechanics.timeout();
     }
 
     @OnWebSocketClose

@@ -63,11 +63,6 @@ public class GameMechanicsImpl implements GameMechanics {
     }
 
     @Override
-    public void incrementScore(@NotNull Long userName) {
-        tasks.add(() -> incrementScoreInternal(userName));
-    }
-
-    @Override
     public void removeUser(long user) {
         tasks.add(() -> removeUserInternal(user));
     }
@@ -76,17 +71,12 @@ public class GameMechanicsImpl implements GameMechanics {
         nameToGame.remove(user);
     }
 
-
-    private void incrementScoreInternal(Long userName) {
-        GameSession myGameSession = nameToGame.get(userName);
-        GameUser myUser = myGameSession.getSelf(userName);
-        myUser.incrementMyScore();
-        GameUser enemyUser = myGameSession.getEnemy(userName);
-        enemyUser.incrementEnemyScore();
-    }
-
     @Override
     public void choice(long user_id, UserAnswer ans) {
+        tasks.add(()->user_choice(user_id, ans));
+    }
+
+    private void user_choice(long user_id, UserAnswer ans) {
 
     }
 
@@ -139,6 +129,15 @@ public class GameMechanicsImpl implements GameMechanics {
                 gameSession.getTrackId(gameSession.getSelf(second)),gameSession.getAnswers(gameSession.getSelf(second)),
                 30/*time*/);
     }
+
+    public void timeout(long user_id) {
+        tasks.add(()->timeoutInternal(user_id));
+    }
+
+    private void timeoutInternal(long user_id) {
+        //
+    }
+
 
     //здесь есть начало и завершение игры
     //дописать еще действия на ответы игрока на вопросы
