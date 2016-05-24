@@ -20,6 +20,7 @@ import static java.util.Collections.sort;
 /**
  * Created by user on 18.05.16.
  */
+//TODO
 @Singleton
 @Path("/scores")
 public class ScoreBoard {

@@ -2,6 +2,7 @@ package rest;
 
 import database.MusicDataSet;
 import main.AccountService;
+import main.Context;
 
 import java.util.*;
 
@@ -9,10 +10,9 @@ import java.util.*;
  * Created by user on 19.05.16.
  */
 public class GameQuestions {
-    private main.Context context;
+    private Context context;
 
-    private ArrayList<Long> id_tracks;
-    private ArrayList<String> rightans;
+    private ArrayList<Long> tracksId;
 
     private HashMap<Long, String> rightAns;
 
@@ -28,23 +28,26 @@ public class GameQuestions {
 
         Random r = new Random();
 
-        for (int i=0; i<songs.size(); i++) {
-            rightAns.put(songs.get(i).getID(), songs.get(i).getAuthor());
-            id_tracks.add(songs.get(i).getID());
-            rightans.add(songs.get(i).getAuthor());
+        for (MusicDataSet song : songs) {
+            rightAns.put(song.getID(), song.getAuthor());
+            tracksId.add(song.getID());
             Set<String> ans = new HashSet<>();
+            MusicDataSet track = accountService.getTrack((long) r.nextInt(5));
+            if (track == null)
+                return;
             while (ans.size() < 4) {
-                ans.add(accountService.getTrack((long) r.nextInt(5)).getAuthor());
+                try {
+                    ans.add(track.getAuthor());
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
             }
             answers.add(ans);
         }
-
-
-
     }
 
     public long getIdQuestion(int n) {
-        return id_tracks.get(n);
+        return tracksId.get(n);
     }
 
     public Set<String> getAnswers(int n) {

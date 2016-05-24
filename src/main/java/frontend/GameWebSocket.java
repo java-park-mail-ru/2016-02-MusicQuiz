@@ -25,21 +25,19 @@ import java.util.Set;
 /**
  * Created by seven-teen on 17.05.16.
  */
+@SuppressWarnings("unused")
 public class GameWebSocket {
 
     private final long myId;
+
     @Nullable
     private Session session;
+
     @NotNull
     private final GameMechanics gameMechanics;
+
     @NotNull
     private final WebSocketService webSocketService;
-    @NotNull
-    private final AccountService accountService;
-    @NotNull
-    private int myScore;
-    @NotNull
-    private int opponentScore;
 
     public long getMyId() {
         return myId;
@@ -50,14 +48,13 @@ public class GameWebSocket {
         this.myId = myId;
         this.gameMechanics = gameMechanics;
         this.webSocketService = webSocketService;
-        this.accountService = accountService;
     }
 
-    public void sendFirstMes(long session_id, long track_id, Set<String> answers, long time) {
+    public void sendFirstMes(long sessionId, long trackId, Set<String> answers, long time) {
         try {
             final JSONObject jsonFirst = new JSONObject();
-            jsonFirst.put("id_gamesession", session_id);
-            jsonFirst.put("id_track", track_id);
+            jsonFirst.put("id_gamesession", sessionId);
+            jsonFirst.put("id_track", trackId);
             jsonFirst.put("answers", answers.toString());
             jsonFirst.put("time", time);
             if (session != null && session.isOpen()) {
@@ -69,11 +66,11 @@ public class GameWebSocket {
         }
     }
 
-    public void sendMes(String right_ans, long id_track, Set<String> answers) {
+    public void sendMes(String rightAns, long idTrack, Set<String> answers) {
         try {
             final JSONObject jsonFirst = new JSONObject();
-            jsonFirst.put("right_answer", right_ans);
-            jsonFirst.put("id_track", id_track);
+            jsonFirst.put("right_answer", rightAns);
+            jsonFirst.put("id_track", idTrack);
             jsonFirst.put("answers", answers.toString());
             if (session != null && session.isOpen()) {
                 session.getRemote().sendString(jsonFirst.toString());
@@ -112,8 +109,8 @@ public class GameWebSocket {
     }
 
     @OnWebSocketConnect
-    public void onOpen(@NotNull Session session) {
-        this.session = session;
+    public void onOpen(@NotNull Session sessionId) {
+        this.session = sessionId;
         if (myId >= 0) {
             webSocketService.addUser(this);
             gameMechanics.addUser(myId);
@@ -128,10 +125,10 @@ public class GameWebSocket {
     public void onMessage(String data) {
         final JSONObject getJson = new JSONObject(data);
         UserAnswer ans = new UserAnswer(getJson.getLong("id_gamesession"), getJson.getString("user_answer"));
-        if (getJson.getString("user_answer") != "-1")
+        if (!(getJson.getString("user_answer").equals("-1")))
             gameMechanics.choice(myId, ans);
         else
-            gameMechanics.timeout();
+            gameMechanics.timeout(myId);
     }
 
     @OnWebSocketClose

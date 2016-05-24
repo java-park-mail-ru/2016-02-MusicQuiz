@@ -6,10 +6,10 @@ package rest;
 public class UserAnswer {
     private final String ans;
 
-    private final long id_gamesession;
+    private final long gamesessionId;
 
-    public UserAnswer(long id_gamesession, String ans)  {
-        this.id_gamesession = id_gamesession;
+    public UserAnswer(long gamesessionId, String ans)  {
+        this.gamesessionId = gamesessionId;
         this.ans = ans;
     }
 }

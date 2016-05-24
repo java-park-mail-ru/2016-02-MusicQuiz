@@ -22,8 +22,7 @@ public class GameMechanicsImpl implements GameMechanics {
     private static final long STEP_TIME = 100;
     @SuppressWarnings("ConstantConditions")
 
-    private static final long GAME_TIME = TimeUnit.SECONDS.toMillis(15);
-
+    private static final long SESSION_TIME = 30L;
 
     @NotNull
     private WebSocketService webSocketService;
@@ -43,7 +42,7 @@ public class GameMechanicsImpl implements GameMechanics {
     @NotNull
     private final Queue<Runnable> tasks = new ConcurrentLinkedQueue<>();
 
-    public GameMechanicsImpl(@NotNull WebSocketService webSocketService, AccountService accountService) {
+    public GameMechanicsImpl(@NotNull WebSocketService webSocketService) {
         this.webSocketService = webSocketService;
     }
 
@@ -72,11 +71,11 @@ public class GameMechanicsImpl implements GameMechanics {
     }
 
     @Override
-    public void choice(long user_id, UserAnswer ans) {
-        tasks.add(()->user_choice(user_id, ans));
+    public void choice(long userId, UserAnswer ans) {
+        tasks.add(() -> userChoice(userId, ans));
     }
 
-    private void user_choice(long user_id, UserAnswer ans) {
+    private void userChoice(long userId, UserAnswer ans) {
 
     }
 
@@ -106,42 +105,34 @@ public class GameMechanicsImpl implements GameMechanics {
                 }
             }
         }
-        for (GameSession session : allSessions) {
-            if (session.getSessionTime() > GAME_TIME) {
-                boolean firstWin = session.isFirstWin();
-                webSocketService.notifyGameOver(session.getFirst(), session.isFirstWin(),
-                        session.getFirst().getMyScore(), session.getSecond().getMyScore());
-                webSocketService.notifyGameOver(session.getSecond(), !session.isFirstWin(),
-                        session.getSecond().getMyScore(), session.getFirst().getMyScore());
-            }
-        }
+
     }
 
     private void startGame(@NotNull Long first, @NotNull Long second) {
         GameSession gameSession = new GameSession(first, second);
         allSessions.add(gameSession);
+        GameUser firstUser = gameSession.getSelf(first);
+        GameUser secondUser = gameSession.getSelf(second);
+        if (firstUser == null || secondUser == null) {
+            System.out.println("User not found");
+            return;
+        }
         nameToGame.put(first, gameSession);
         nameToGame.put(second, gameSession);
-        webSocketService.notifyStartGame(gameSession.getSelf(first), 1/*gameSession.id*/,
-                gameSession.getTrackId(gameSession.getSelf(first)),gameSession.getAnswers(gameSession.getSelf(first)),
-                30/*time*/);
-        webSocketService.notifyStartGame(gameSession.getSelf(second), 1/*gameSession.id*/,
-                gameSession.getTrackId(gameSession.getSelf(second)),gameSession.getAnswers(gameSession.getSelf(second)),
-                30/*time*/);
+        webSocketService.notifyStartGame(firstUser, gameSession.getSessionId(), gameSession.getTrackId(firstUser), gameSession.getAnswers(firstUser), SESSION_TIME);
+        webSocketService.notifyStartGame(secondUser, gameSession.getSessionId(), gameSession.getTrackId(secondUser), gameSession.getAnswers(secondUser), SESSION_TIME);
     }
 
-    public void timeout(long user_id) {
-        tasks.add(()->timeoutInternal(user_id));
+    @Override
+    public void timeout(Long userId) {
+        GameSession session = nameToGame.get(userId);
+        tasks.add(() -> timeoutInternal(session));
     }
 
-    private void timeoutInternal(long user_id) {
-        //
+    private void timeoutInternal(GameSession session) {
+        boolean firstWin = session.isFirstWin();
+        webSocketService.notifyGameOver(session.getFirst(), firstWin, session.getFirst().getMyScore(), session.getSecond().getMyScore());
+        webSocketService.notifyGameOver(session.getSecond(), !firstWin, session.getSecond().getMyScore(), session.getFirst().getMyScore());
     }
-
-
-    //здесь есть начало и завершение игры
-    //дописать еще действия на ответы игрока на вопросы
-    //также понять условия когда игра заканчивается
-    //действия при завершении игры описаны в gmStep
 }
 

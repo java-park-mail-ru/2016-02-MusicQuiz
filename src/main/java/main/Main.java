@@ -46,7 +46,7 @@ public class Main {
 
         final WebSocketService webSocketService = new WebSocketServiceImpl();
         context.put(WebSocketService.class, webSocketService);
-        final GameMechanics gameMechanics = new GameMechanicsImpl(webSocketService,accountService);
+        final GameMechanics gameMechanics = new GameMechanicsImpl(webSocketService);
         context.put(GameMechanics.class, gameMechanics);
 
         contextHandler.addServlet(new ServletHolder(new GameWebSocketServlet(context)), "/gameplay");
@@ -73,6 +73,7 @@ public class Main {
         contextHandler.addServlet(servletHolder, "/*");
         server.start();
         server.join();
+        gameMechanics.run();
     }
 
     private static void loadProperties() throws  IOException {

@@ -15,11 +15,11 @@ public interface WebSocketService {
 
     void answerUser(GameUser user, String ans);
 
-    void notifyStartGame(GameUser user, long session_id, long track_id, Set<String> answers, long time);
+    void notifyStartGame(GameUser user, Long session_id, Long track_id, Set<String> answers, Long time);
 
-    void notifyAnswer(GameUser user, String right_ans, long id_track, Set<String> answers);
+    void notifyAnswer(GameUser user, String right_ans, Long id_track, Set<String> answers);
 
-    void notifyGameOver(GameUser user, boolean win, int points1, int points2);
+    void notifyGameOver(GameUser user, Boolean win, Integer points1, Integer points2);
 
     void notifyError(GameUser user, String error);
 }

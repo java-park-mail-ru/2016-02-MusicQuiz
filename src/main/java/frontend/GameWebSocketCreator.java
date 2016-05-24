@@ -2,6 +2,7 @@ package frontend;
 
 import base.GameMechanics;
 import base.WebSocketService;
+import database.UsersDataSet;
 import main.AccountService;
 import main.Context;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
@@ -26,12 +27,11 @@ public class GameWebSocketCreator implements WebSocketCreator {
     public GameWebSocket createWebSocket(ServletUpgradeRequest req, ServletUpgradeResponse resp) {
         final String sessionId = req.getHttpServletRequest().getSession().getId();
         long id;
-        try {
-            id = accountService.getUserBySession(sessionId).getID();
-        } catch (NullPointerException e) {
+        UsersDataSet  user = accountService.getUserBySession(sessionId);
+        if(user == null)
             id = -1;
-        }
-
+        else
+            id = user.getID();
         return new GameWebSocket(id, gameMechanics, webSocketService, accountService);
     }
 }

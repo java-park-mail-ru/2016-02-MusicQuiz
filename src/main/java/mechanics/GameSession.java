@@ -9,6 +9,7 @@ import java.time.Clock;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by user on 21.04.16.
@@ -21,6 +22,11 @@ public class GameSession {
     private final GameUser second;
 
 
+
+    @NotNull
+    private long sessionId;
+
+    private static final AtomicLong ID_GENERATOR = new AtomicLong(0);
 
     @NotNull
     private Map<Long, GameUser> users = new HashMap<>();
@@ -40,7 +46,7 @@ public class GameSession {
 
         this.first = gameUser1;
         this.second = gameUser2;
-
+        this.sessionId = ID_GENERATOR.getAndIncrement();
 
         songs =  new GameQuestions();
     }
@@ -67,11 +73,11 @@ public class GameSession {
     }
 
     public long getTrackId(GameUser user) {
-        return songs.getIdQuestion(user.getNum_question());
+        return songs.getIdQuestion(user.getNumQuestion());
     }
 
     public Set<String> getAnswers(GameUser user) {
-        return songs.getAnswers(user.getNum_question());
+        return songs.getAnswers(user.getNumQuestion());
     }
 
     @NotNull
@@ -81,5 +87,10 @@ public class GameSession {
 
     public boolean isFirstWin() {
         return first.getMyScore() > second.getMyScore();
+    }
+
+    @NotNull
+    public long getSessionId() {
+        return sessionId;
     }
 }

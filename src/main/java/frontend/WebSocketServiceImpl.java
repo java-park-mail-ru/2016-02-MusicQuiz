@@ -31,17 +31,17 @@ public class WebSocketServiceImpl implements WebSocketService {
     }
 
     @Override
-    public void notifyStartGame(GameUser user, long session_id, long track_id, Set<String> answers, long time) {
-        userSockets.get(user.getMyId()).sendFirstMes(session_id, track_id, answers, time);
+    public void notifyStartGame(GameUser user, Long sessionId, Long trackId, Set<String> answers, Long time) {
+        userSockets.get(user.getMyId()).sendFirstMes(sessionId, trackId, answers, time);
     }
 
     @Override
-    public void notifyAnswer(GameUser user, String right_ans, long id_track, Set<String> answers) {
-        userSockets.get(user.getMyId()).sendMes(right_ans, id_track, answers);
+    public void notifyAnswer(GameUser user, String rightAns, Long idTrack, Set<String> answers) {
+        userSockets.get(user.getMyId()).sendMes(rightAns, idTrack, answers);
     }
 
     @Override
-    public void notifyGameOver(GameUser user, boolean win, int points1, int points2) {
+    public void notifyGameOver(GameUser user, Boolean win, Integer points1, Integer points2) {
         userSockets.get(user.getMyId()).gameOver(win, points1, points2);
         userSockets.remove(user.getMyId());
     }

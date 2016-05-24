@@ -8,12 +8,14 @@ import rest.UserAnswer;
  */
 
 public interface GameMechanics {
-    public void addUser(@NotNull Long user);
+     void addUser(@NotNull Long user);
 
-    public void choice(long user_id, UserAnswer ans);
+     void choice(long id, UserAnswer ans);
 
-    public void removeUser(long user);
+     void removeUser(long user);
 
-    public void run();
+     void run();
+
+     void timeout(Long id);
 
 }
