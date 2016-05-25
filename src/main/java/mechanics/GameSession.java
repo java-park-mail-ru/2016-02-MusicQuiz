@@ -21,8 +21,6 @@ public class GameSession {
     private final GameUser first;
     @NotNull
     private final GameUser second;
-
-    @NotNull
     private long sessionId;
 
     private static final AtomicLong ID_GENERATOR = new AtomicLong(0);
@@ -104,7 +102,6 @@ public class GameSession {
         }
     }
 
-    @NotNull
     public long getSessionId() {
         return sessionId;
     }

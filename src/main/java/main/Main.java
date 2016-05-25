@@ -2,11 +2,9 @@ package main;
 
 import base.GameMechanics;
 import base.WebSocketService;
-import frontend.GameWebSocket;
 import frontend.GameWebSocketServlet;
 import frontend.WebSocketServiceImpl;
 import mechanics.GameMechanicsImpl;
-import mechanics.GameSession;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;

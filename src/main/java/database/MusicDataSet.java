@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * Created by seven-teen on 19.04.16.
  */
-//@SuppressWarnings("unused")
+@SuppressWarnings("unused")
 @Entity
 @Table(name="Music")
 public class MusicDataSet implements Serializable {
