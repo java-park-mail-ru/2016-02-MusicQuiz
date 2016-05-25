@@ -1,7 +1,6 @@
 package main;
 
 import database.*;
-import org.eclipse.jetty.server.session.JDBCSessionManager;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

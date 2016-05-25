@@ -79,7 +79,7 @@ public class GameMechanicsImpl implements GameMechanics {
         tasks.add(() -> userChoice(userId, ans));
     }
 
-    private void userChoice(Long userId, UserAnswer ans) {
+    private void userChoice(@NotNull Long userId, UserAnswer ans) {
         GameSession userSession =nameToGame.get(userId);
         userSession.isRightAns(userId, ans);
         String rightAns = userSession.getRightAnswer(userId);
@@ -91,20 +91,16 @@ public class GameMechanicsImpl implements GameMechanics {
 
     @Override
     public void run() {
-        long lastFrameMillis = STEP_TIME;
         //noinspection InfiniteLoopStatement
         while (true) {
             final long before = clock.millis();
-            gmStep(lastFrameMillis);
+            gmStep();
             final long after = clock.millis();
             Helper.sleep(STEP_TIME - (after - before));
-
-            final long afterSleep = clock.millis();
-            lastFrameMillis = afterSleep - before;
         }
     }
 
-    private void gmStep(long frameTime) {
+    private void gmStep() {
         while (!tasks.isEmpty()) {
             final Runnable nextTask = tasks.poll();
             if (nextTask != null) {

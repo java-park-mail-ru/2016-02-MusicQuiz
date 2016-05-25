@@ -46,6 +46,7 @@ public class UsersDAO {
         return (UsersDataSet) criteria.add(Restrictions.eq("email", email)).uniqueResult();
     }
 
+    @SuppressWarnings("unchecked")
     @Nullable
     public List<UsersDataSet> getTopUsers(int id) throws HibernateException {
         final Criteria criteria = session.createCriteria(UsersDataSet.class)
