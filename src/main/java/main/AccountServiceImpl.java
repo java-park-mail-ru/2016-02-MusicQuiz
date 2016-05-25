@@ -119,6 +119,7 @@ public class AccountServiceImpl implements AccountService {
             UsersDataSet user = (dao.getUser(id));
             if (user != null)
                 dao.deleteUser(user);
+            tx.commit();
         }
         catch (HibernateException ex) {
             if(tx != null && (tx.getStatus() == TransactionStatus.ACTIVE
