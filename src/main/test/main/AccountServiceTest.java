@@ -23,7 +23,7 @@ public class AccountServiceTest {
     public void testAddUser(){
         accountService.addUser(testUser);
         accountService.addUser(testUser);
-        Collection <UsersDataSet> allUsers = accountService.getAllUsers();
+        Collection <UsersDataSet> allUsers = accountService.getTopUsers(1);
         if(allUsers != null){
             allUsers.toArray();
         }

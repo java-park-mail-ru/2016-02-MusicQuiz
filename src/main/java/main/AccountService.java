@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by IlyaRogov on 29.02.16.
@@ -13,7 +14,7 @@ import java.util.Collection;
 
 public interface AccountService {
 
-    Collection<UsersDataSet> getAllUsers();
+    List<UsersDataSet> getTopUsers(int id);
 
     boolean addUser(UsersDataSet userProfile);
 

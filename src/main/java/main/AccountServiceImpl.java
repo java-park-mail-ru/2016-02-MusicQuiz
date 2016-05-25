@@ -39,12 +39,12 @@ public class AccountServiceImpl implements AccountService {
 
     @Nullable
     @Override
-    public Collection<UsersDataSet> getAllUsers() {
+    public List<UsersDataSet> getTopUsers(int id) {
         Transaction tx = null;
         try(Session session = factory.openSession()) {
             tx = session.beginTransaction();
             final UsersDAO dao = new UsersDAO(session);
-            return dao.getAllUsers();
+            return dao.getTopUsers(id);
         }catch (HibernateException ex) {
             if(tx != null && (tx.getStatus() == TransactionStatus.ACTIVE
                             || tx.getStatus() == TransactionStatus.MARKED_ROLLBACK)) {
