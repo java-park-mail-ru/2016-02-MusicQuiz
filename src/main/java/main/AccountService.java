@@ -45,4 +45,6 @@ public interface AccountService {
     MusicDataSet getTrack(Long id);
 
     ArrayList<MusicDataSet> getTracks();
+
+    void updatePoints(Long id, int points1);
 }

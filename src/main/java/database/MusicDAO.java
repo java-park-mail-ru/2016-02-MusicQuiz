@@ -47,16 +47,4 @@ public class MusicDAO {
         }
     }
 
-    /*public long count() {
-        final Transaction trx = session.beginTransaction();
-        try{
-            session.delete(track);
-            trx.commit();
-        }
-        catch (HibernateException e){
-            e.printStackTrace();
-            trx.rollback();
-        }
-    }*/
-
 }

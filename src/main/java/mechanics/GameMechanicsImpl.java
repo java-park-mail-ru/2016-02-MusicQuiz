@@ -12,7 +12,6 @@ import rest.UserAnswer;
 import java.time.Clock;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by user on 19.05.16.
@@ -26,6 +25,10 @@ public class GameMechanicsImpl implements GameMechanics {
 
     @NotNull
     private WebSocketService webSocketService;
+
+    @NotNull
+    private final AccountService accountService;
+
 
     @NotNull
     private Map<Long, GameSession> nameToGame = new HashMap<>();
@@ -42,8 +45,9 @@ public class GameMechanicsImpl implements GameMechanics {
     @NotNull
     private final Queue<Runnable> tasks = new ConcurrentLinkedQueue<>();
 
-    public GameMechanicsImpl(@NotNull WebSocketService webSocketService) {
+    public GameMechanicsImpl(@NotNull WebSocketService webSocketService, @NotNull AccountService accountService) {
         this.webSocketService = webSocketService;
+        this.accountService = accountService;
     }
 
     @Override
@@ -71,11 +75,11 @@ public class GameMechanicsImpl implements GameMechanics {
     }
 
     @Override
-    public void choice(long userId, UserAnswer ans) {
+    public void choice(Long userId, UserAnswer ans) {
         tasks.add(() -> userChoice(userId, ans));
     }
 
-    private void userChoice(long userId, UserAnswer ans) {
+    private void userChoice(Long userId, UserAnswer ans) {
 
     }
 
@@ -133,6 +137,9 @@ public class GameMechanicsImpl implements GameMechanics {
         boolean firstWin = session.isFirstWin();
         webSocketService.notifyGameOver(session.getFirst(), firstWin, session.getFirst().getMyScore(), session.getSecond().getMyScore());
         webSocketService.notifyGameOver(session.getSecond(), !firstWin, session.getSecond().getMyScore(), session.getFirst().getMyScore());
+        accountService.updatePoints(session.getFirst().getMyId(), session.getFirst().getMyScore());
+        accountService.updatePoints(session.getSecond().getMyId(), session.getSecond().getMyScore());
+        allSessions.remove(session);
     }
 }
 

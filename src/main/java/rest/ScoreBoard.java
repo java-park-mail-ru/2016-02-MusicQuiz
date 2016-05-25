@@ -33,17 +33,6 @@ public class ScoreBoard {
         final AccountService accountService = context.get(AccountService.class);
         List<UsersDataSet> users = accountService.getTopUsers(id);
         return Response.status(Response.Status.OK).entity(users.toArray(new UsersDataSet[users.size()])).build();
-        /*int i=0;
-        String jsonStr = "{ \n\t";
-        for (Iterator<UsersDataSet> iterator=users.iterator(); iterator.hasNext() /*&& (i<id); i++) {
-            UsersDataSet user = iterator.next();
-            jsonStr += "{ \n\t\t\"login\": " + user.getLogin() + ", " +
-                    "\n\t\t\"points\": \"" + user.getPoints() + "\"\n\t}";
-            if (iterator.hasNext())
-                jsonStr += ",\n\t";
-        }
-        jsonStr += "\n}";
-        return Response.status(Response.Status.OK).entity(jsonStr).build();*/
     }
 
     @GET

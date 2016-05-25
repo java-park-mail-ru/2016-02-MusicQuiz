@@ -10,7 +10,7 @@ import rest.UserAnswer;
 public interface GameMechanics {
      void addUser(@NotNull Long user);
 
-     void choice(long id, UserAnswer ans);
+     void choice(Long id, UserAnswer ans);
 
      void removeUser(long user);
 

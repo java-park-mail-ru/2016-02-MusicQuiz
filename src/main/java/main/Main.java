@@ -46,7 +46,7 @@ public class Main {
 
         final WebSocketService webSocketService = new WebSocketServiceImpl();
         context.put(WebSocketService.class, webSocketService);
-        final GameMechanics gameMechanics = new GameMechanicsImpl(webSocketService);
+        final GameMechanics gameMechanics = new GameMechanicsImpl(webSocketService,accountService);
         context.put(GameMechanics.class, gameMechanics);
 
         contextHandler.addServlet(new ServletHolder(new GameWebSocketServlet(context)), "/gameplay");

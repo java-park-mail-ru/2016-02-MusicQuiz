@@ -54,4 +54,9 @@ public class UsersDAO {
                 .setMaxResults(id);
         return (List<UsersDataSet>) criteria.list();
     }
+
+    public void updatePoints(UsersDataSet user, int newPoints) {
+        user.setPoints(user.getPoints()+newPoints);
+        session.update(user);
+    }
 }

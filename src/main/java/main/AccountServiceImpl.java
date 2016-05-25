@@ -212,4 +212,22 @@ public class AccountServiceImpl implements AccountService {
         }
         return tracks;
     }
+
+    @Override
+    public void updatePoints(Long id, int points) {
+        Transaction tx = null;
+        try(Session session = factory.openSession()) {
+            tx = session.beginTransaction();
+            final UsersDAO dao = new UsersDAO(session);
+            dao.updatePoints(dao.getUser(id), points);
+        }
+        catch (HibernateException ex) {
+            if(tx != null && (tx.getStatus() == TransactionStatus.ACTIVE
+                    || tx.getStatus() == TransactionStatus.MARKED_ROLLBACK)) {
+                tx.rollback();
+            }
+            ex.printStackTrace();
+            throw new HibernateException("Unnable to update user's points", ex);
+        }
+    }
 }
