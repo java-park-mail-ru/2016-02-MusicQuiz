@@ -6,6 +6,8 @@ import main.AccountService;
 import main.Context;
 import org.hibernate.HibernateException;
 import org.jboss.logging.Param;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -30,9 +32,18 @@ public class ScoreBoard {
 
     @GET
     public Response getTop(@QueryParam("limit") int id) {
+        if (id == 0)
+            id = 10;
         final AccountService accountService = context.get(AccountService.class);
         List<UsersDataSet> users = accountService.getTopUsers(id);
-        return Response.status(Response.Status.OK).entity(users.toArray(new UsersDataSet[users.size()])).build();
+        final JSONArray jsonArray = new JSONArray();
+        for (UsersDataSet user : users) {
+            JSONObject json = new JSONObject();
+            json.put("login", user.getLogin());
+            json.put("points", user.getPoints());
+            jsonArray.put(json);
+        }
+        return Response.status(Response.Status.OK).entity(jsonArray.toString()).build();
     }
 
     @GET
