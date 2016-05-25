@@ -4,6 +4,7 @@ package rest;
  * Created by user on 19.05.16.
  */
 public class UserAnswer {
+
     private final String ans;
 
     private final long gamesessionId;
@@ -11,5 +12,9 @@ public class UserAnswer {
     public UserAnswer(long gamesessionId, String ans)  {
         this.gamesessionId = gamesessionId;
         this.ans = ans;
+    }
+
+    public String getAns() {
+        return ans;
     }
 }

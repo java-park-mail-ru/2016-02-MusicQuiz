@@ -26,11 +26,6 @@ public class WebSocketServiceImpl implements WebSocketService {
     }
 
     @Override
-    public void answerUser(GameUser user, String ans) {
-
-    }
-
-    @Override
     public void notifyStartGame(GameUser user, Long sessionId, Long trackId, Set<String> answers, Long time) {
         userSockets.get(user.getMyId()).sendFirstMes(sessionId, trackId, answers, time);
     }

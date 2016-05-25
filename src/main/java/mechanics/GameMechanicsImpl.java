@@ -80,6 +80,12 @@ public class GameMechanicsImpl implements GameMechanics {
     }
 
     private void userChoice(Long userId, UserAnswer ans) {
+        GameSession userSession =nameToGame.get(userId);
+        userSession.isRightAns(userId, ans);
+        String rightAns = userSession.getRightAnswer(userId);
+        Long trackId = userSession.getTrackId(userId);
+        Set<String> answers = userSession.getAnswers(userId);
+        webSocketService.notifyAnswer(userSession.getSelf(userId), rightAns, trackId, answers);
 
     }
 
@@ -123,8 +129,8 @@ public class GameMechanicsImpl implements GameMechanics {
         }
         nameToGame.put(first, gameSession);
         nameToGame.put(second, gameSession);
-        webSocketService.notifyStartGame(firstUser, gameSession.getSessionId(), gameSession.getTrackId(firstUser), gameSession.getAnswers(firstUser), SESSION_TIME);
-        webSocketService.notifyStartGame(secondUser, gameSession.getSessionId(), gameSession.getTrackId(secondUser), gameSession.getAnswers(secondUser), SESSION_TIME);
+        webSocketService.notifyStartGame(firstUser, gameSession.getSessionId(), gameSession.getTrackId(first), gameSession.getAnswers(first), SESSION_TIME);
+        webSocketService.notifyStartGame(secondUser, gameSession.getSessionId(), gameSession.getTrackId(second), gameSession.getAnswers(second), SESSION_TIME);
     }
 
     @Override

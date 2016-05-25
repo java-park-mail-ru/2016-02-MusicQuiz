@@ -51,6 +51,7 @@ public class GameQuestions {
     }
 
     public Set<String> getAnswers(int n) {
-        return answers.get(n);
-    }
+        return answers.get(n); }
+
+    public String getRightAnswer(int num) { return rightAns.get(num);}
 }

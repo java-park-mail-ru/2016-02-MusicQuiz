@@ -4,6 +4,7 @@ import base.GameUser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import rest.GameQuestions;
+import rest.UserAnswer;
 
 import java.time.Clock;
 import java.util.HashMap;
@@ -20,8 +21,6 @@ public class GameSession {
     private final GameUser first;
     @NotNull
     private final GameUser second;
-
-
 
     @NotNull
     private long sessionId;
@@ -72,12 +71,21 @@ public class GameSession {
         return first;
     }
 
-    public long getTrackId(GameUser user) {
-        return songs.getIdQuestion(user.getNumQuestion());
+    public long getTrackId(Long id) {
+        GameUser user = getSelf(id);
+        long res = songs.getIdQuestion(user.getNumQuestion());
+        user.incrementyQuestion();
+        return res;
     }
 
-    public Set<String> getAnswers(GameUser user) {
+    public Set<String> getAnswers(Long id) {
+        GameUser user = getSelf(id);
         return songs.getAnswers(user.getNumQuestion());
+    }
+
+    public String getRightAnswer(Long id) {
+        GameUser user = getSelf(id);
+        return songs.getRightAnswer(user.getNumQuestion());
     }
 
     @NotNull
@@ -87,6 +95,13 @@ public class GameSession {
 
     public boolean isFirstWin() {
         return first.getMyScore() > second.getMyScore();
+    }
+
+    public void isRightAns(Long userId, UserAnswer answer) {
+        if (getRightAnswer(userId).equals(answer.getAns())) {
+            getSelf(userId).incrementMyScore();
+            getEnemy(userId).incrementEnemyScore();
+        }
     }
 
     @NotNull

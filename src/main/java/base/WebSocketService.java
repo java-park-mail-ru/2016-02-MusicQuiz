@@ -13,8 +13,6 @@ public interface WebSocketService {
 
     void removeUser(GameWebSocket user);
 
-    void answerUser(GameUser user, String ans);
-
     void notifyStartGame(GameUser user, Long session_id, Long track_id, Set<String> answers, Long time);
 
     void notifyAnswer(GameUser user, String right_ans, Long id_track, Set<String> answers);
