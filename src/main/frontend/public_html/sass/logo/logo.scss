@@ -1,0 +1,82 @@
+$wrapper-box-shadow: -5px 4px 65px 0px rgba(0,0,0,0.31);
+
+.content__wrapper {
+    position: relative;
+    padding-top: 5%;
+    margin: auto auto;
+    width: 40em;
+    max-height: 1em;
+    display: block;
+}
+
+.content__wrapper__logo {
+    z-index: 999;
+    padding-top: 2%;
+    background-color: rgb(249, 246, 192);
+    border-width: 0.1em;
+    border-color: rgb(126, 107, 93);
+    border-style: solid;
+    border-radius: 1em;
+    box-shadow: $wrapper-box-shadow;
+    font-family: BILLIEBOB;
+    font-size: 5em;
+    text-align: center;
+    text-decoration: none;
+}
+
+.content__wrapper__logo__music {
+    color: #9F3ED5;
+    -webkit-user-select: none;
+}
+
+.content__wrapper__logo__quiz {
+    color: #9FEE00;
+    -webkit-user-select: none;
+}
+
+.content__wrapper__vinyl {
+    width: 40em;
+    max-height: 1em;
+    display: block;
+    z-index: -1;
+    display: block;
+    position: relative;
+    margin: auto auto;
+    left: 27%;
+    transform: translate(-50%, -50%);
+}
+
+@-webkit-keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to { 
+    transform: rotate(360deg);
+  }
+}
+
+@-moz-keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to { 
+    transform: rotate(360deg);
+  }
+}
+
+@-o-keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to { 
+    transform: rotate(360deg);
+  }
+}
+
+.vinyl-png {
+    z-index: -1;
+    animation-name: rotate;
+    animation-duration: 6s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}

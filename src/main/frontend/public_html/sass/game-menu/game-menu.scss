@@ -1,0 +1,26 @@
+$box-shadow: -5px 4px 5px 0px rgba(0,0,0,0.31);
+
+.content__wrapper__game-menu {
+    display: block;
+    z-index: 998;
+    padding-top: 2%;
+    width: 23em;
+    margin: auto auto;
+    margin-top: 2em;
+    border: 3px solid white;
+    border-radius: 5px;
+    background-color: #F2F2F2;
+}
+
+.content__wrapper__game-menu__player__info {
+    margin-bottom: 2%;
+    left: 0px;
+    top: 0px;
+    height: 2em;
+    font-size: 2em;
+    display: block;
+    font-family: aleksandracregular;
+    padding-top: 1%;
+    text-decoration: none;
+    overflow: auto;
+}

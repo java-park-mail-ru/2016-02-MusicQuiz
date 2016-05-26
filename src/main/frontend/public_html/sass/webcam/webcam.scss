@@ -1,0 +1,153 @@
+$box-shadow:
+        0 0 3px rgba(0,0,0,0) inset,
+        0 1px 1px 1px rgba(255,255,255,.2),
+        0 -1px 1px 1px rgba(0,0,0,0);
+
+.hide-layout {
+  display: none;
+  background: #000;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  opacity: 0.5;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 998;
+}
+
+.video {
+    height: 480px;
+    width: 640px;
+}
+
+.pop-up__camera {
+    display: none;
+    position: fixed;
+    margin-left: 300px;
+    margin-right: 300px;
+    top: 5%;
+    width: 640px;
+    height: 530px;
+    background-color: black;
+    box-shadow: 0px 0px 10px #000;
+    z-index: 998;
+}
+
+.pop-up__camera__record {
+    display: none;
+    height: 480px;
+    border-bottom: 2px solid black;
+}
+
+.pop-up__camera__buttons {
+    display: none;
+    top: 0%;
+    height: 40px;
+    margin-left: 15em;
+}
+
+.pop-up__camera__btn {
+    display: inline-block;
+    position: relative;
+    width: 4em;
+    height: 2em;
+    line-height: 2em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    margin-left: 1em; 
+    vertical-align: middle;
+    text-align: center;
+    text-decoration: none;
+    user-select: none;
+    color: rgb(0,0,0);
+    background-color: white;
+    outline: none;
+    border: 1px solid rgba(0,0,0,.4);
+    border-top-color: rgba(0,0,0,.3);
+    border-radius: 2px;
+    box-shadow: $box-shadow;
+    transition: .2s ease-in-out;
+    font-family: aleksandracregular;
+    font-size: 1em;
+    text-align: center;
+}
+
+.pop-up__camera__btn:active{
+    background: linear-gradient(rgb(250,250,250), rgb(235,235,235));
+    box-shadow:
+    0 0 3px rgba(0,0,0,.5) inset,
+    0 1px 1px 1px rgba(255,255,255,.4),
+    0 -1px 1px 1px rgba(0,0,0,.1);
+}
+
+.button-photo {
+    display: block;
+    position: relative;
+    width: 9.5em;
+    height: 2em;
+    line-height: 2em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    margin-left: 16em; 
+    vertical-align: middle;
+    text-align: center;
+    text-decoration: none;
+    user-select: none;
+    color: rgb(0,0,0);
+    outline: none;
+    border: 1px solid rgba(0,0,0,.4);
+    border-top-color: rgba(0,0,0,.3);
+    border-radius: 2px;
+    box-shadow: $box-shadow;
+    transition: .2s ease-in-out;
+    font-family: aleksandracregular;
+    font-size: 1em;
+    text-align: center;
+}
+
+.form__photo__widget {
+    margin-top: 3em;
+}
+
+.upload-pic {
+    display: block;
+    position: absolute;
+    width: 9.5em;
+    height: 2em;
+    line-height: 2em;
+    margin-left: 0em; 
+    vertical-align: middle;
+    text-align: center;
+    text-decoration: none;
+    user-select: none;
+    -moz-opacity: 0; 
+    filter: alpha(opacity=0); 
+    z-index:20;
+    opacity: 0; 
+    color: rgb(0,0,0);
+    outline: none;
+    border: 1px solid rgba(0,0,0,.4);
+    border-top-color: rgba(0,0,0,.3);
+    border-radius: 2px;
+    box-shadow: $box-shadow;
+    transition: .2s ease-in-out;
+    font-family: aleksandracregular;
+    font-size: 1em;
+    text-align: center;
+}
+
+canvas {
+    display: none;
+
+}
+
+#photo {
+    width: 8em;
+    min-height: 8em;
+    margin-left: 5em;
+    margin-top: -6.7em;
+    display: block;
+   /* margin: 10% auto;*/
+    background: white;
+}

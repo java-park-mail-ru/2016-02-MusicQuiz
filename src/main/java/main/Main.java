@@ -62,7 +62,7 @@ public class Main {
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setDirectoriesListed(true);
         resourceHandler.setWelcomeFiles(new String[]{ "index.html" });
-        resourceHandler.setResourceBase("public_html");
+        resourceHandler.setResourceBase("src/main/frontend/public_html");
 
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[] { resourceHandler, contextHandler });

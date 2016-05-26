@@ -1,0 +1,46 @@
+<fest:template xmlns:fest="http://fest.mail.ru" context_name="data">
+	    <div class="content__wrapper__vinyl">
+  		<img src="/img/vynil.png" class="vinyl-png"/>
+	</div>
+	<div class="content__wrapper">
+		<div class="content__wrapper__logo">
+			<span class="content__wrapper__logo__music">Music</span>
+			<span class="content__wrapper__logo__quiz">Quiz</span>
+		</div>
+
+		<div class="content__wrapper__game-menu">
+			<fest:if test="data.isAuth">
+				<div class="content__wrapper__game-menu__player__info">
+					<!--<img class="menu__game__avatar" src="/img/people.svg"/>-->
+					<span class="menu__username">
+						Привет,
+						<fest:space/>
+						<fest:value>
+							data.username
+	                    </fest:value>
+	                </span>
+					<span class="menu__score">
+						Твои очки:
+						<fest:space/>
+						<fest:value>
+							data.score
+	                    </fest:value>
+					</span>
+				</div>
+				<a class="content__wrapper__game-menu__button" href='#game'>Одиночная игра</a>
+				<a class="content__wrapper__game-menu__button" href='#'>Игра против соперника</a>
+				<a class="content__wrapper__game-menu__button" href='#scoreboard'>Лучшие игроки</a>
+				<a class="content__wrapper__game-menu__button" href='#logout'>Выйти</a>
+			</fest:if>
+			<fest:if test="!data.isAuth">
+				<div class="">
+					<a class="content__wrapper__game-menu__button" href='#login'>Войти</a>
+					<a class="content__wrapper__game-menu__button" href='#'>Одиночная игра</a>
+					<a class="content__wrapper__game-menu__button" href='#scoreboard'>Лучшие игроки</a>
+				</div>
+			</fest:if>
+		</div>
+    </div>
+
+
+</fest:template>
