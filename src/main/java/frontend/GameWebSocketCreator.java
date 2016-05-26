@@ -26,8 +26,10 @@ public class GameWebSocketCreator implements WebSocketCreator {
     @Override
     public GameWebSocket createWebSocket(ServletUpgradeRequest req, ServletUpgradeResponse resp) {
         final String sessionId = req.getHttpServletRequest().getSession().getId();
+        System.out.println("ID FROM GAMEPLAY: " + sessionId);
         long id;
         UsersDataSet  user = accountService.getUserBySession(sessionId);
+        System.out.println("User ? : " + user.getLogin());
         if(user == null)
             id = -1;
         else

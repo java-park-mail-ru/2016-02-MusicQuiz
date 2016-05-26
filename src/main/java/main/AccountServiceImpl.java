@@ -98,17 +98,18 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Nullable
     public UsersDataSet getUserBySession(String sessionID) {
+        printSessions();
         if (sessions.containsKey(sessionID))
             return sessions.get(sessionID);
         return null;
     }
 
-    /*@Override
+    @Override
     public void printSessions() {
         for (String s : sessions.keySet()) {
             System.out.println(s);
         }
-    }*/
+    }
 
     @Override
     public void deleteUser(Long id) {

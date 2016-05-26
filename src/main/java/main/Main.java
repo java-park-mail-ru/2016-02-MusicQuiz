@@ -62,7 +62,7 @@ public class Main {
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setDirectoriesListed(true);
         resourceHandler.setWelcomeFiles(new String[]{ "index.html" });
-        resourceHandler.setResourceBase("src/main/frontend/public_html");
+        resourceHandler.setResourceBase("/Users/IlyaRogov/Documents/ТП/2016_1_MusicQuiz/public_html");
 
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[] { resourceHandler, contextHandler });

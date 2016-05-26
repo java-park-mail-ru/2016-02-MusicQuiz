@@ -52,8 +52,10 @@ public class Sessions {
         if(currentUser != null && currentUser.getPassword().equals(user.getPassword())) {
             String jsonStr200 = "{\n\t\"id\": " + currentUser.getID() +"\n}\n";
             accountService.logIn(sessionID, currentUser);
+            System.out.println("PUT THIS ID:" + sessionID);
             Cookie cookie = new Cookie("MusicQuiz", sessionID);
             response.addCookie(cookie);
+            accountService.printSessions();
             return Response.status(Response.Status.OK).entity(jsonStr200).build();
         }
         else {

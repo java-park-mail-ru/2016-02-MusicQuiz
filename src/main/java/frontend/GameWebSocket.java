@@ -9,6 +9,7 @@ import org.eclipse.jetty.websocket.api.WebSocketException;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
@@ -22,6 +23,7 @@ import java.util.Set;
  * Created by seven-teen on 17.05.16.
  */
 @SuppressWarnings("unused")
+@WebSocket
 public class GameWebSocket {
 
     private final long myId;
@@ -44,6 +46,7 @@ public class GameWebSocket {
         this.myId = myId;
         this.gameMechanics = gameMechanics;
         this.webSocketService = webSocketService;
+
     }
 
     public void sendFirstMes(long sessionId, long trackId, Set<String> answers, long time) {
@@ -106,6 +109,7 @@ public class GameWebSocket {
 
     @OnWebSocketConnect
     public void onOpen(@NotNull Session sessionId) {
+        System.out.println("Call onOpen");
         this.session = sessionId;
         if (myId >= 0) {
             webSocketService.addUser(this);
