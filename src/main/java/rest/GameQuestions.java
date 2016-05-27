@@ -4,22 +4,27 @@ import database.MusicDataSet;
 import main.AccountService;
 import main.Context;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
 /**
  * Created by user on 19.05.16.
  */
 public class GameQuestions {
-    private Context context;
-
     private ArrayList<Long> tracksId;
 
     private HashMap<Long, String> rightAns;
 
     public ArrayList<Set<String>> answers;
 
+    @Inject
+    private Context context;
+
     public GameQuestions() {
-        final AccountService accountService = context.get(AccountService.class);
+        System.out.println("CONTEXT : " + context);
+
+         final AccountService accountService = context.get(AccountService.class);
 
         rightAns = new HashMap<>();
         answers = new ArrayList<>();

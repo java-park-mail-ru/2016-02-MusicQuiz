@@ -43,6 +43,7 @@ public class GameWebSocket {
 
     public GameWebSocket(long myId, @NotNull GameMechanics gameMechanics,
                          @NotNull WebSocketService webSocketService, @NotNull AccountService accountService) {
+        System.out.println("Scoket for user was created!!!");
         this.myId = myId;
         this.gameMechanics = gameMechanics;
         this.webSocketService = webSocketService;
@@ -57,8 +58,8 @@ public class GameWebSocket {
             jsonFirst.put("answers", answers.toString());
             jsonFirst.put("time", time);
             if (session != null && session.isOpen()) {
+                System.out.println(jsonFirst.toString());
                 session.getRemote().sendString(jsonFirst.toString());
-                session.close();
             }
         } catch (IOException | WebSocketException e) {
             e.printStackTrace();
@@ -73,7 +74,6 @@ public class GameWebSocket {
             jsonFirst.put("answers", answers.toString());
             if (session != null && session.isOpen()) {
                 session.getRemote().sendString(jsonFirst.toString());
-                session.close();
             }
         } catch (IOException | WebSocketException e) {
             e.printStackTrace();

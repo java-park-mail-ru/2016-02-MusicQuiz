@@ -14,10 +14,7 @@ import org.eclipse.jetty.server.Handler;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
-import rest.MusicStream;
-import rest.ScoreBoard;
-import rest.Sessions;
-import rest.Users;
+import rest.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -49,7 +46,7 @@ public class Main {
 
         contextHandler.addServlet(new ServletHolder(new GameWebSocketServlet(context)), "/gameplay");
 
-        final ResourceConfig config = new ResourceConfig(MusicStream.class, Users.class, Sessions.class, ScoreBoard.class);
+        final ResourceConfig config = new ResourceConfig(MusicStream.class, Users.class, Sessions.class, ScoreBoard.class, GameQuestions.class);
         config.register(new AbstractBinder() {
             @Override
             protected void configure() {
@@ -70,7 +67,7 @@ public class Main {
 
         contextHandler.addServlet(servletHolder, "/*");
         server.start();
-        server.join();
+        //server.join();
         gameMechanics.run();
     }
 

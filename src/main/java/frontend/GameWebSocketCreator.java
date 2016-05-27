@@ -18,6 +18,7 @@ public class GameWebSocketCreator implements WebSocketCreator {
     private final WebSocketService webSocketService;
 
     public GameWebSocketCreator(Context context) {
+        System.out.println("Socket was created!!!");
         this.accountService = context.get(AccountService.class);
         this.gameMechanics = context.get(GameMechanics.class);
         this.webSocketService = context.get(WebSocketService.class);

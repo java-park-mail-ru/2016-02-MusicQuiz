@@ -37,7 +37,7 @@ public class GameMechanicsImpl implements GameMechanics {
     private Set<GameSession> allSessions = new HashSet<>();
 
     @Nullable
-    private volatile Long waiter;
+    private volatile Long waiter = null;
 
     @NotNull
     private Clock clock = Clock.systemDefaultZone();
@@ -52,15 +52,18 @@ public class GameMechanicsImpl implements GameMechanics {
 
     @Override
     public void addUser(@NotNull Long user) {
+        System.out.println("Function addUser is working!!!");
         tasks.add(() -> addUserInternal(user));
     }
 
     private void addUserInternal(@NotNull Long user) {
+        System.out.println("Function addUserInternal is working!!!");
         if (waiter != null) {
             //noinspection ConstantConditions
             startGame(user, waiter);
             waiter = null;
         } else {
+            System.out.println("WAITER = " + user);
             waiter = user;
         }
     }
@@ -117,6 +120,8 @@ public class GameMechanicsImpl implements GameMechanics {
     private void startGame(@NotNull Long first, @NotNull Long second) {
         GameSession gameSession = new GameSession(first, second);
         allSessions.add(gameSession);
+        System.out.println("GET FIRST IN START: "+ first);
+        System.out.println("GET SCOND IN START: " + second);
         GameUser firstUser = gameSession.getSelf(first);
         GameUser secondUser = gameSession.getSelf(second);
         if (firstUser == null || secondUser == null) {
@@ -125,6 +130,8 @@ public class GameMechanicsImpl implements GameMechanics {
         }
         nameToGame.put(first, gameSession);
         nameToGame.put(second, gameSession);
+        System.out.println("FIRST : "  + firstUser.getMyId());
+        System.out.println("SECOND : " + secondUser.getMyId());
         webSocketService.notifyStartGame(firstUser, gameSession.getSessionId(), gameSession.getTrackId(first), gameSession.getAnswers(first), SESSION_TIME);
         webSocketService.notifyStartGame(secondUser, gameSession.getSessionId(), gameSession.getTrackId(second), gameSession.getAnswers(second), SESSION_TIME);
     }

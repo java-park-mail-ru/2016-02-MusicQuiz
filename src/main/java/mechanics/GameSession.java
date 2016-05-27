@@ -8,6 +8,7 @@ import rest.UserAnswer;
 
 import java.time.Clock;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
@@ -35,9 +36,11 @@ public class GameSession {
         GameUser gameUser1 = new GameUser(user1);
         gameUser1.setOpponentId(user2);
 
-        GameUser gameUser2 = new GameUser(user1);
-        gameUser2.setOpponentId(user2);
+        GameUser gameUser2 = new GameUser(user2);
+        gameUser2.setOpponentId(user1);
 
+        System.out.println("USER:::" + user1 + " gameUser:::" + gameUser1.getMyId());
+        System.out.println("USER:::" + user2 + " gameUser:::" + gameUser2.getMyId());
         users.put(user1, gameUser1);
         users.put(user2, gameUser2);
 
@@ -45,7 +48,7 @@ public class GameSession {
         this.second = gameUser2;
         this.sessionId = ID_GENERATOR.getAndIncrement();
 
-        songs =  new GameQuestions();
+        //songs =  new GameQuestions();
     }
 
     @Nullable
@@ -71,14 +74,21 @@ public class GameSession {
 
     public long getTrackId(Long id) {
         GameUser user = getSelf(id);
-        long res = songs.getIdQuestion(user.getNumQuestion());
+        //long res = songs.getIdQuestion(user.getNumQuestion());
         user.incrementyQuestion();
-        return res;
+        return 1;
+        //return res;
     }
 
     public Set<String> getAnswers(Long id) {
         GameUser user = getSelf(id);
-        return songs.getAnswers(user.getNumQuestion());
+        Set<String> ans = new HashSet<>();
+        ans.add("HI");
+        ans.add("IT");
+        ans.add("IS");
+        ans.add("WORKING");
+        return ans;
+        //return songs.getAnswers(user.getNumQuestion());
     }
 
     public String getRightAnswer(Long id) {

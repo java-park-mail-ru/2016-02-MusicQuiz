@@ -16,6 +16,7 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     @Override
     public void addUser(GameWebSocket user) {
+        System.out.println("user was added in websocketservice!!!!    !" + user.getMyId());
         userSockets.put(user.getMyId(), user);
     }
 
@@ -26,6 +27,7 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     @Override
     public void notifyStartGame(GameUser user, Long sessionId, Long trackId, Set<String> answers, Long time) {
+        System.out.println(user.getMyId() + "   SEND FIRST : " + userSockets.get(user.getMyId()));
         userSockets.get(user.getMyId()).sendFirstMes(sessionId, trackId, answers, time);
     }
 
