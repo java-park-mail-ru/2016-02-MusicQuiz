@@ -5,7 +5,7 @@ import database.UsersDataSet;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by IlyaRogov on 29.02.16.
@@ -13,7 +13,7 @@ import java.util.Collection;
 
 public interface AccountService {
 
-    Collection<UsersDataSet> getAllUsers();
+    List<UsersDataSet> getTopUsers(int id);
 
     boolean addUser(UsersDataSet userProfile);
 
@@ -24,10 +24,10 @@ public interface AccountService {
 
     void deleteUser(Long id);
 
-    /* for debug
+     //for debug
     @SuppressWarnings("unused")
     void printSessions();
-    */
+
 
     void updateUser(UsersDataSet user, UsersDataSet changedUser);
 
@@ -44,4 +44,6 @@ public interface AccountService {
     MusicDataSet getTrack(Long id);
 
     ArrayList<MusicDataSet> getTracks();
+
+    void updatePoints(Long id, int points1);
 }

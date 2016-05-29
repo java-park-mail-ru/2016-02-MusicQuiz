@@ -16,14 +16,14 @@ public class AccountServiceTest {
 
     @Before
     public void setupAccountService(){
-        accountService = new AccountServiceImpl("test_hiberante.cfg.xml");
+        accountService = new AccountServiceImpl("test_hibernate.cfg.xml");
     }
 
     @Test
     public void testAddUser(){
         accountService.addUser(testUser);
         accountService.addUser(testUser);
-        Collection <UsersDataSet> allUsers = accountService.getAllUsers();
+        Collection <UsersDataSet> allUsers = accountService.getTopUsers(1);
         if(allUsers != null){
             allUsers.toArray();
         }

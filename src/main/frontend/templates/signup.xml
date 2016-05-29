@@ -1,0 +1,52 @@
+<fest:template xmlns:fest="http://fest.mail.ru">
+    <div class="content__wrapper">
+		<div class="wrapper__signup-form">
+			<span class="wrapper__sign-form__header">
+                SIGN UP
+            </span>
+			<div class="sign-form-error"></div>
+			<form action="">
+				<input class="sign-form__login" type="login" minlenght="1" maxlength="20" placeholder="LOGIN"/>
+                <input class="sign-form__email" type="email" minlenght="1" maxlength="20" placeholder="EMAIL"/>
+                <input class="sign-form__password" type="password" minlenght="1" maxlength="15" placeholder="PASSWORD"/>
+                <div class="form__photo__widget">
+                    <a class="button-photo" id="pop-up" type="back">
+                        <i class="fa fa-camera"></i>
+                        <fest:space/>
+                        TAKE A PHOTO
+                    </a>
+                    <div class="button-photo">
+                        <input class="upload-pic" type="file" name="photo" accept="image/*,image/jpeg"/>
+                        <i class="fa fa-upload"></i>
+                        <fest:space/>
+                        UPLOAD PIC
+                    </div>
+                    <img src="/img/people.svg" id="photo" alt="Ваша фотография"/>
+                </div>
+                <a class="back-form button" type="back" href="#menu">
+                    <i class="fa fa-caret-left fa-lg"></i>
+                    <fest:space/>
+                    BACK
+                </a>
+                <button class="submit-form button" type="submit">
+                    SIGN UP
+                </button>
+            </form>
+		</div>
+    </div>
+    <div class="hide-layout" id="layout"></div>
+    <div class="pop-up__camera">
+        <div class="pop-up__camera__record">
+            <video id="video" ></video>
+            <canvas id="canvas"></canvas>
+        </div>
+        <div class="pop-up__camera__buttons">
+            <a class="pop-up__camera__btn" id="shot">
+                SHOT
+            </a>
+            <a class="pop-up__camera__btn" id="cancel">
+                CANCEL
+            </a>
+        </div>
+    </div>
+</fest:template>

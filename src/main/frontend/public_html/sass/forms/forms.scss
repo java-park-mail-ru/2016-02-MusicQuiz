@@ -1,0 +1,129 @@
+$box-shadow: -5px 4px 5px 0px rgba(0,0,0,0.31);
+$white: rgb(255, 255, 255);
+$btn-shadow: 0 0 3px rgba(0,0,0,0) inset,
+        0 1px 1px 1px rgba(255,255,255,.2),
+        0 -1px 1px 1px rgba(0,0,0,0);
+$background-color: #9FEE00;
+$form-border: rgba(0,0,0, 0.3) 0.05em solid;
+$btn-border: 1px solid rgba(0,0,0,.4);
+$btn-border-top-color: rgba(0,0,0,.3);
+
+.wrapper__login-form {
+    width: 30em;
+    margin: 10% auto;
+    background-color: $white;
+    box-shadow: $box-shadow;
+    border-radius: 5px;
+}
+
+.wrapper__signup-form {
+    width: 30em;
+    margin: auto auto;
+    background-color: $white;
+    box-shadow: $box-shadow;
+}
+
+.wrapper__sign-form__header {
+    font-family: $aleksandracregular;
+    text-align: center;
+    display: block;
+    padding-top: 0.5em;
+    font-size: 3.5em;
+    color: black;
+}
+
+.sign-form-error {
+    height: 2em;
+    margin: 0.2em auto;
+    width: 75%;
+    text-align: center;
+    font-family: $aleksandracregular;
+    font-size: 1em;
+    color: red;
+    display: block;
+    
+}
+
+.sign-form__login, .sign-form__email, .sign-form__password, .sign-form__submit-password{
+    display: block;
+    margin: 1% auto;
+    height: 1.5em;
+    width: 75%;
+    border-radius: 0.1em;
+    border: $form-border;
+    font-family: $aleksandracregular;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.signup-link {
+    display: block;
+    text-align: center;
+    font-family: $aleksandracregular;
+    font-size: 1em;
+    color: black;
+    padding-bottom: 1em;
+    text-decoration: none;
+
+    &::hover {
+        color: red;
+    }
+}
+
+
+.back-form-button {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  width: 70px;
+  height: 50px;
+  margin: auto;
+  background-color: #A8A5A5;
+  font-family: aleksandracregular;
+  border-radius: 5px;
+  line-height: 50px;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: black;
+  overflow: hidden;
+  padding-top: 1%;
+  margin-bottom: 2%;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    display: block;
+    width: 10px;
+    height: 10px;
+    margin: 20px auto 0;
+    background-color: white;
+    border-radius: 10px;
+    opacity: 0;
+  }
+  
+  &:hover {
+    &::before {
+      transform: scale(30);
+      transition: .5s;
+      animation: mymove .5s;
+    }
+  }
+}
+
+@keyframes mymove {
+  0%   {opacity: .1;}
+  50%  {opacity: .5;}
+  100% {opacity: 0;}
+}
+
+.submit-form {
+    margin-left: 7%;
+    background-color: $background-color;   
+}
+
+@import "form-btns";

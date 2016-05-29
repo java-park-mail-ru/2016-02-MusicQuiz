@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
  * Created by seven-teen on 12.05.16.
  */
 public class Helper {
+    private static final int SLEEP = 5000;
+
     @Nullable
     protected static String getCookie(HttpServletRequest request){
         String sessionID = null;
@@ -23,4 +25,24 @@ public class Helper {
         }
         return sessionID;
     }
+
+    public static void sleep(long period){
+        if (period <= 0) {
+            return;
+        }
+        try{
+            Thread.sleep(period);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void sleep(){
+        try{
+            Thread.sleep(SLEEP);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }
+

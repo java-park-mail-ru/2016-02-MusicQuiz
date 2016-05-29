@@ -1,5 +1,10 @@
 package main;
 
+import base.GameMechanics;
+import base.WebSocketService;
+import frontend.GameWebSocketServlet;
+import frontend.WebSocketServiceImpl;
+import mechanics.GameMechanicsImpl;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -9,10 +14,7 @@ import org.eclipse.jetty.server.Handler;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
-import rest.MusicStream;
-import rest.ScoreBoard;
-import rest.Sessions;
-import rest.Users;
+import rest.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -34,9 +36,17 @@ public class Main {
         final ServletContextHandler contextHandler = new ServletContextHandler(server, "/api/", ServletContextHandler.SESSIONS);
 
         final Context context = new Context();
-        context.put(AccountService.class, new AccountServiceImpl("hibernate.cfg.xml"));
+        AccountService accountService = new AccountServiceImpl("hibernate.cfg.xml");
+        context.put(AccountService.class, accountService);
 
-        final ResourceConfig config = new ResourceConfig(MusicStream.class, Users.class, Sessions.class, ScoreBoard.class);
+        final WebSocketService webSocketService = new WebSocketServiceImpl();
+        context.put(WebSocketService.class, webSocketService);
+        final GameMechanics gameMechanics = new GameMechanicsImpl(webSocketService,accountService);
+        context.put(GameMechanics.class, gameMechanics);
+
+        contextHandler.addServlet(new ServletHolder(new GameWebSocketServlet(context)), "/gameplay");
+
+        final ResourceConfig config = new ResourceConfig(MusicStream.class, Users.class, Sessions.class, ScoreBoard.class, GameQuestions.class);
         config.register(new AbstractBinder() {
             @Override
             protected void configure() {
@@ -49,7 +59,7 @@ public class Main {
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setDirectoriesListed(true);
         resourceHandler.setWelcomeFiles(new String[]{ "index.html" });
-        resourceHandler.setResourceBase("public_html");
+        resourceHandler.setResourceBase("/Users/IlyaRogov/Documents/ТП/2016_1_MusicQuiz/public_html");
 
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[] { resourceHandler, contextHandler });
@@ -57,7 +67,8 @@ public class Main {
 
         contextHandler.addServlet(servletHolder, "/*");
         server.start();
-        server.join();
+        //server.join();
+        gameMechanics.run();
     }
 
     private static void loadProperties() throws  IOException {

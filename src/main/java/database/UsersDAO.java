@@ -4,10 +4,10 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -48,8 +48,16 @@ public class UsersDAO {
 
     @SuppressWarnings("unchecked")
     @Nullable
-    public Collection<UsersDataSet> getAllUsers() throws HibernateException {
-        final Criteria criteria = session.createCriteria(UsersDataSet.class);
+    public List<UsersDataSet> getTopUsers(int id) throws HibernateException {
+        final Criteria criteria = session.createCriteria(UsersDataSet.class)
+                .addOrder(Order.desc("points"))
+                .setFirstResult(0)
+                .setMaxResults(id);
         return (List<UsersDataSet>) criteria.list();
+    }
+
+    public void updatePoints(UsersDataSet user, int newPoints) {
+        user.setPoints(user.getPoints()+newPoints);
+        session.update(user);
     }
 }

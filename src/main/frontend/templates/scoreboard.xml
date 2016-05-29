@@ -1,0 +1,31 @@
+
+<fest:template xmlns:fest="http://fest.mail.ru" context_name="data">
+    <div class="content__wrapper">
+        <div class="wrapper__scoreboard">
+            <span class="wrapper__scoreboard__header">
+                SCOREBOARD
+            </span>
+            <fest:each iterate="data" index="i" value="v">
+                <div class="scoreboard__item">
+                    <span>
+                        <fest:value>
+                            v.login
+                        </fest:value>
+                        <fest:space/>
+                        :
+                        <fest:space/>
+                        <fest:value>
+                            v.points
+                        </fest:value>
+                    </span>
+            </div>
+            </fest:each>
+            <a class="back-scoreboard-button" type="back" href="#main">
+                <i class="fa fa-caret-left fa-lg"></i>
+                <fest:space/>
+                BACK
+            </a>
+        </div>
+    </div>
+</fest:template>
+

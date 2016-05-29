@@ -1,7 +1,6 @@
 package main;
 
 import database.*;
-import org.eclipse.jetty.server.session.JDBCSessionManager;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -39,12 +38,12 @@ public class AccountServiceImpl implements AccountService {
 
     @Nullable
     @Override
-    public Collection<UsersDataSet> getAllUsers() {
+    public List<UsersDataSet> getTopUsers(int id) {
         Transaction tx = null;
         try(Session session = factory.openSession()) {
             tx = session.beginTransaction();
             final UsersDAO dao = new UsersDAO(session);
-            return dao.getAllUsers();
+            return dao.getTopUsers(id);
         }catch (HibernateException ex) {
             if(tx != null && (tx.getStatus() == TransactionStatus.ACTIVE
                             || tx.getStatus() == TransactionStatus.MARKED_ROLLBACK)) {
@@ -99,17 +98,18 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Nullable
     public UsersDataSet getUserBySession(String sessionID) {
+        printSessions();
         if (sessions.containsKey(sessionID))
             return sessions.get(sessionID);
         return null;
     }
 
-    /*@Override
+    @Override
     public void printSessions() {
         for (String s : sessions.keySet()) {
             System.out.println(s);
         }
-    }*/
+    }
 
     @Override
     public void deleteUser(Long id) {
@@ -212,5 +212,23 @@ public class AccountServiceImpl implements AccountService {
             tracks.add(getTrack((long) r.nextInt(2)));
         }
         return tracks;
+    }
+
+    @Override
+    public void updatePoints(Long id, int points) {
+        Transaction tx = null;
+        try(Session session = factory.openSession()) {
+            tx = session.beginTransaction();
+            final UsersDAO dao = new UsersDAO(session);
+            dao.updatePoints(dao.getUser(id), points);
+        }
+        catch (HibernateException ex) {
+            if(tx != null && (tx.getStatus() == TransactionStatus.ACTIVE
+                    || tx.getStatus() == TransactionStatus.MARKED_ROLLBACK)) {
+                tx.rollback();
+            }
+            ex.printStackTrace();
+            throw new HibernateException("Unnable to update user's points", ex);
+        }
     }
 }

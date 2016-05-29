@@ -3,8 +3,11 @@ package rest;
 import database.UsersDataSet;
 import database.UsersDAO;
 import main.AccountService;
+import main.Context;
 import org.hibernate.HibernateException;
 import org.jboss.logging.Param;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -20,29 +23,27 @@ import static java.util.Collections.sort;
 /**
  * Created by user on 18.05.16.
  */
+//TODO
 @Singleton
 @Path("/scores")
 public class ScoreBoard {
     @Inject
-    private main.Context context;
+    private Context context;
 
     @GET
-    public Response getTop(@QueryParam("limit") Long id) {
+    public Response getTop(@QueryParam("limit") int id) {
+        if (id == 0)
+            id = 10;
         final AccountService accountService = context.get(AccountService.class);
-        Collection<UsersDataSet> users = accountService.getAllUsers();
-        List<UsersDataSet> list= new ArrayList<UsersDataSet>(users);
-        Collections.sort(list);
-        int i=0;
-        String jsonStr = "{ \n\t";
-        for (Iterator<UsersDataSet> iterator=list.iterator(); iterator.hasNext() && (i<id); i++) {
-            UsersDataSet user = iterator.next();
-            jsonStr += "{ \n\t\t\"login\": " + user.getLogin() + ", " +
-                    "\n\t\t\"points\": \"" + user.getPoints() + "\"\n\t}";
-            if (iterator.hasNext())
-                jsonStr += ",\n\t";
+        List<UsersDataSet> users = accountService.getTopUsers(id);
+        final JSONArray jsonArray = new JSONArray();
+        for (UsersDataSet user : users) {
+            JSONObject json = new JSONObject();
+            json.put("login", user.getLogin());
+            json.put("points", user.getPoints());
+            jsonArray.put(json);
         }
-        jsonStr += "\n}";
-        return Response.status(Response.Status.OK).entity(jsonStr).build();
+        return Response.status(Response.Status.OK).entity(jsonArray.toString()).build();
     }
 
     @GET

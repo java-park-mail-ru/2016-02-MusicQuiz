@@ -5,8 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-
+@SuppressWarnings("unused")
 public class MusicDAO {
     private final Session session;
 
@@ -46,4 +45,5 @@ public class MusicDAO {
             trx.rollback();
         }
     }
+
 }
